@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магический Лес</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Добро пожаловать в Магический Лес!</h1>
+        <p>Привет, {{ player.name }}! Что вы хотите сделать?</p>
+        <form action="/action" method="get">
+            <button name="choice" value="lake">🏞️ Отправиться к озеру</button>
+            <button name="choice" value="riddle">🤔 Разгадать загадку</button>
+            <button name="choice" value="inventory">🎒 Открыть инвентарь</button>
+            <button name="choice" value="status">📊 Показатели игрока</button>
+            <button name="choice" value="exit">🚪 Выйти из игры</button>
+        </form>
+    </div>
+</body>
+</html>
