@@ -1,9 +1,29 @@
 services:
-  web:
+  auth_service:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./auth_service
     ports:
-      - "2000:2000"
-    volumes:
-      - .:/app
+      - "8000:8000"
+
+  game_service:
+    build:
+      context: ./game_service
+    ports:
+      - "8001:8001"
+    depends_on:
+      - auth_service
+      - inventory_service
+      - riddle_service
+
+  inventory_service:
+    build:
+      context: ./inventory_service
+    ports:
+      - "8002:8002"
+
+  riddle_service:
+    build:
+      context: ./riddle_service
+    ports:
+      - "8003:8003"
+

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Магический Лес - Игра</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c3e50;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #34495e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #2c3e50;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .action-btn {
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+        }
+        .action-btn:hover {
+            background-color: #2980b9;
+        }
+        .inventory {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #2c3e50;
+            border-radius: 5px;
+        }
+        .message-box {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #2c3e50;
+            border-radius: 5px;
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="status-bar">
+            <div>❤️ Здоровье: {{ player.health }}</div>
+            <div>✨ Мана: {{ player.mana }}</div>
+            <div>🎒 Инвентарь: {{ player.inventory|join(', ') if player.inventory else 'пусто' }}</div>
+        </div>
+
+        <div class="action-buttons">
+            <form action="/lake/{{ player.player_id }}" method="get">
+                <input type="hidden" name="action" value="lake">
+                <button type="submit" class="action-btn">🏞️ Отправиться к озеру</button>
+            </form>
+
+            <form action="/riddle/{{ player.player_id }}" method="get">
+                <input type="hidden" name="action" value="riddle">
+                <button type="submit" class="action-btn">🤔 Разгадать загадку (5-10 маны)</button>
+            </form>
+
+            <form action="/inventory/{{ player.player_id }}" method="get">
+                <input type="hidden" name="action" value="inventory">
+                <button type="submit" class="action-btn">🎒 Открыть инвентарь</button>
+            </form>
+        </div>
+
+        <div class="message-box" id="messageBox">
+            <!-- Здесь будут отображаться сообщения игры -->
+        </div>
+
+        <div class="inventory" id="inventoryBox" style="display: none;">
+            <h3>🎒 Инвентарь:</h3>
+            <div id="inventoryContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Здесь можно добавить JavaScript для обработки действий и обновления интерфейса
+        async function handleAction(action) {
+            const response = await fetch(`/action/${player.player_id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `action=${action}`
+            });
+            const data = await response.json();
+            
+            // Обновляем сообщение
+            document.getElementById('messageBox').innerText = data.message;
+            
+            // Если это действие инвентаря, показываем его содержимое
+            if (action === 'inventory') {
+                const inventoryBox = document.getElementById('inventoryBox');
+                const inventoryContent = document.getElementById('inventoryContent');
+                inventoryBox.style.display = 'block';
+                if (data.inventory && data.inventory.length > 0) {
+                    inventoryContent.innerHTML = data.inventory.map(item => `<div>📦 ${item}</div>`).join('');
+                } else {
+                    inventoryContent.innerHTML = '<div>Инвентарь пуст</div>';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

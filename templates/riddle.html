@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Магический Лес - Загадка</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2c3e50;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .riddle-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #34495e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .riddle-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #2c3e50;
+            border-radius: 5px;
+        }
+        .answer-form {
+            margin-top: 20px;
+        }
+        .answer-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .back-button {
+            background-color: #95a5a6;
+            margin-top: 10px;
+        }
+        .status {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .status.success {
+            background-color: #27ae60;
+        }
+        .status.error {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="riddle-container">
+        <div class="status-bar">
+            <div>❤️ Здоровье: {{ player.health }}</div>
+            <div>✨ Мана: {{ player.mana }}</div>
+            <div>🎒 Инвентарь: {{ player.inventory|join(', ') if player.inventory else 'пусто' }}</div>
+        </div>
+
+        {% if message %}
+        <div class="status {% if success %}success{% else %}error{% endif %}">
+            {{ message }}
+        </div>
+        {% endif %}
+
+        <div class="riddle-text">
+            {{ riddle.text }}
+        </div>
+
+        <form class="answer-form" action="/riddle/{{ player.player_id }}/answer" method="post">
+            <input type="hidden" name="riddle_id" value="{{ riddle.id }}">
+            <input type="text" name="answer" class="answer-input" placeholder="Введите ваш ответ" required>
+            <button type="submit" class="button">Ответить</button>
+        </form>
+
+        <form action="/game/{{ player.player_id }}" method="get">
+            <button type="submit" class="button back-button">Вернуться к действиям</button>
+        </form>
+    </div>
+</body>
+</html> 
