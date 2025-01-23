@@ -72,3 +72,6 @@ async def read_root(request: Request, player_id: Optional[str] = Cookie(None)):
         return RedirectResponse(url=f"/game/{player_id}")
     response = templates.TemplateResponse("index.html", {"request": request})
     return response 
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)

@@ -1,29 +1,59 @@
 services:
+  gateway:
+    build:
+      context: ./gateway  # Папка с Dockerfile гейтвея
+    ports:
+      - "8000:8000"  # Проброс порта гейтвея
+    networks:
+      - app-network
+    depends_on:
+      - auth_service
+      - inventory_service
+      - riddle_service
+      - game_service
+      - laken_service
+
   auth_service:
     build:
       context: ./auth_service
     ports:
-      - "8000:8000"
+      - "5000:5000"
+    networks:
+      - app-network  
 
   game_service:
     build:
       context: ./game_service
     ports:
-      - "8001:8001"
-    depends_on:
-      - auth_service
-      - inventory_service
-      - riddle_service
+      - "5001:5000"
+    networks:
+      - app-network
 
   inventory_service:
     build:
       context: ./inventory_service
     ports:
-      - "8002:8002"
+      - "5002:5000"
+    networks:
+      - app-network
+
+  laken_service:
+    build:
+       context: ./laken_service
+    ports:
+     - "5003:8004" 
+    networks:
+      - app-network     
 
   riddle_service:
     build:
       context: ./riddle_service
     ports:
-      - "8003:8003"
+      - "5004:8003"
+    networks:
+      - app-network  
+
+networks:
+  app-network:
+    driver: bridge    
 
