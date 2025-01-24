@@ -12,7 +12,7 @@ from fastapi import Form
 app = FastAPI()
 
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="gateway/templates")
 
 
 game_state = {}
