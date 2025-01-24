@@ -9,10 +9,14 @@ from fastapi import Cookie
 from typing import Optional
 from fastapi import Form
 
+import os
+from fastapi.templating import Jinja2Templates
+
 app = FastAPI()
 
 
-templates = Jinja2Templates(directory="gateway/templates")
+templates = Jinja2Templates(directory="/gateway/templates")
+# templates = Jinja2Templates(directory=os.path.join(os.path.dirname(os.path.abspath(__file__)), "../templates"))
 
 
 game_state = {}
