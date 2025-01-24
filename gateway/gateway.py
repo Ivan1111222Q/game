@@ -1,69 +1,158 @@
-from fastapi import FastAPI, HTTPException
-import httpx
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Request, HTTPException, Form, Cookie
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-import uvicorn
-import random
-from fastapi.responses import RedirectResponse
-from fastapi import Cookie
+import httpx
 from typing import Optional
-from fastapi import Form
+import random
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
+# Конфигурация сервисов
+SERVICES = {
+    "storage": "http://storage-service:8001",
+    "inventory": "http://inventory-service:8002",
+    "riddle": "http://riddle-service:8003",
+    "location": "http://location-service:8004"
+}
 
-@app.get("/auth_service/{endpoint}")
-async def proxy_to_app1(endpoint: str):
-    try:
+@app.get("/", response_class=HTMLResponse)
+async def read_root(request: Request, player_id: Optional[str] = Cookie(None)):
+    if player_id:
         async with httpx.AsyncClient() as client:
-            response = await client.get(f"http://auth_service:5000/{endpoint}")
-            response.raise_for_status()
-            return response.json()
-    except httpx.RequestError as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+            try:
+                response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
+                if response.status_code == 200:
+                    return RedirectResponse(url=f"/game/{player_id}")
+            except:
+                pass
+    return templates.TemplateResponse("index.html", {"request": request})
 
-@app.get("/game_service/{endpoint}")
-async def proxy_to_app2(endpoint: str):
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f"http://game_service:5000/{endpoint}")
-            response.raise_for_status()
-            return response.json()
-    except httpx.RequestError as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+@app.post("/start")
+async def start_game():
+    player_id = str(random.randint(1000, 9999))
+    player_data = {
+        "health": 100,
+        "mana": 100,
+        "inventory": [],
+        "max_capacity": 10,
+        "max_weight": 10.0,
+        "current_weight": 0.0,
+        "gold": 0,
+        "experience": 0
+    }
     
-
-@app.get("/inventory_service/{endpoint}")
-async def proxy_to_app3(endpoint: str):
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f"http://inventory_service:5000/{endpoint}")
-            response.raise_for_status()
-            return response.json()
-    except httpx.RequestError as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+    async with httpx.AsyncClient() as client:
+        await client.put(f"{SERVICES['storage']}/player/{player_id}", json=player_data)
     
-@app.get("/riddle_service/{endpoint}")
-async def proxy_to_app4(endpoint: str):
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f"http://riddle_service:5000/{endpoint}")
-            response.raise_for_status()
-            return response.json()
-    except httpx.RequestError as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
+    response = RedirectResponse(url=f"/game/{player_id}", status_code=303)
+    response.set_cookie(key="player_id", value=player_id, max_age=3600)
+    return response
 
-@app.get("/lake_service/{endpoint}")
-async def proxy_to_app5(endpoint: str):
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(f"http://lake_service:5000/{endpoint}")
-            response.raise_for_status()
-            return response.json()
-    except httpx.RequestError as exc:
-        raise HTTPException(status_code=500, detail=str(exc))
-    
+@app.get("/game/{player_id}")
+async def get_game(request: Request, player_id: str):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
+        if response.status_code == 404:
+            return RedirectResponse(url="/")
+        player_data = response.json()
+        return templates.TemplateResponse("game.html", {
+            "request": request,
+            "player": player_data
+        })
+
+@app.get("/inventory/{player_id}")
+async def get_inventory(request: Request, player_id: str, message: str = None, success: bool = None):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
+        if response.status_code == 404:
+            return RedirectResponse(url="/")
+        player_data = response.json()
+        return templates.TemplateResponse("inventory.html", {
+            "request": request,
+            "player": player_data,
+            "message": message,
+            "success": success
+        })
+
+@app.post("/inventory/{player_id}/use")
+async def use_item(player_id: str, item: str = Form(...)):
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{SERVICES['inventory']}/inventory/{player_id}/use",
+            json={"item": item}
+        )
+        result = response.json()
+        return RedirectResponse(
+            url=f"/inventory/{player_id}?message={result['message']}&success={result['status'] == 'success'}",
+            status_code=303
+        )
+
+@app.get("/lake/{player_id}")
+async def get_lake(request: Request, player_id: str, message: str = None, success: bool = None):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
+        if response.status_code == 404:
+            return RedirectResponse(url="/")
+        player_data = response.json()
+        
+        location_response = await client.get(f"{SERVICES['location']}/location/lake")
+        location_data = location_response.json()
+        
+        return templates.TemplateResponse("lake.html", {
+            "request": request,
+            "player": player_data,
+            "location": location_data,
+            "message": message,
+            "success": success
+        })
+
+@app.post("/lake/{player_id}/choice")
+async def lake_choice(player_id: str, direction: str = Form(...)):
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{SERVICES['location']}/location/lake/{player_id}/action",
+            json={"action": direction}
+        )
+        result = response.json()
+        return RedirectResponse(
+            url=f"/lake/{player_id}?message={result['message']}&success={result['success']}",
+            status_code=303
+        )
+
+@app.get("/riddle/{player_id}")
+async def get_riddle(request: Request, player_id: str, message: str = None, success: bool = None):
+    async with httpx.AsyncClient() as client:
+        player_response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
+        if player_response.status_code == 404:
+            return RedirectResponse(url="/")
+        player_data = player_response.json()
+        
+        riddle_response = await client.get(f"{SERVICES['riddle']}/riddle/random")
+        riddle_data = riddle_response.json()
+        
+        return templates.TemplateResponse("riddle.html", {
+            "request": request,
+            "player": player_data,
+            "riddle": riddle_data,
+            "message": message,
+            "success": success
+        })
+
+@app.post("/riddle/{player_id}/answer")
+async def answer_riddle(player_id: str, riddle_id: str = Form(...), answer: str = Form(...)):
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{SERVICES['riddle']}/riddle/{player_id}/check",
+            json={"riddle_id": riddle_id, "answer": answer}
+        )
+        result = response.json()
+        return RedirectResponse(
+            url=f"/riddle/{player_id}?message={result['message']}&success={result['correct']}",
+            status_code=303
+        )
+
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)    
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)    
