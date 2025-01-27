@@ -78,42 +78,50 @@ async def get_inventory(request: Request, player_id: str, message: str = None, s
 
 
 @app.post("/inventory/{player_id}/use")
-async def use_item(request: Request, player_id: str, item: str = Form(...)):
+async def use_item(player_id: str, item: dict):
     async with httpx.AsyncClient() as client:
         # Получаем данные игрока из storage service
         response = await client.get(f"{STORAGE_SERVICE}/player/{player_id}")
         if response.status_code == 404:
-            return RedirectResponse(url="/", status_code=303)
+            return RedirectResponse(
+                url=f"/inventory/{player_id}?message=Игрок не найден&success=false",
+                status_code=303
+            )
         
         player_data = response.json()
-        message = ""
-        success = False
+        item_name = item.get("item")
+        
+        if not item_name:
+            return RedirectResponse(
+                url=f"/inventory/{player_id}?message=Предмет не указан&success=false",
+                status_code=303
+            )
 
-        if item in player_data["inventory"]:
-            if item == "зелье":
-                player_data["inventory"].remove(item)
+        if item_name in player_data["inventory"]:
+            if item_name == "зелье":
+                player_data["inventory"].remove(item_name)
                 player_data["mana"] += 10
-                message = f"Предмет '{item}' использован, +10% маны."
+                message = f"Предмет '{item_name}' использован, +10% маны."
                 success = True
-            elif item == "руна":
-                player_data["inventory"].remove(item)
+            elif item_name == "руна":
+                player_data["inventory"].remove(item_name)
                 player_data["health"] += 50
-                message = f"Предмет '{item}' использован, +50 здоровья."
+                message = f"Предмет '{item_name}' использован, +50 здоровья."
                 success = True
-            elif item == "ключ":
-                player_data["inventory"].remove(item)
+            elif item_name == "ключ":
+                player_data["inventory"].remove(item_name)
                 player_data["health"] += 150
-                message = f"Предмет '{item}' использован, +150 здоровья."
+                message = f"Предмет '{item_name}' использован, +150 здоровья."
                 success = True
             else:
-                message = f"Предмет '{item}' нельзя использовать."
+                message = f"Предмет '{item_name}' нельзя использовать."
                 success = False
                 
             if success:
                 # Обновляем данные в storage service только если были изменения
                 await client.put(f"{STORAGE_SERVICE}/player/{player_id}", json=player_data)
         else:
-            message = f"Предмет '{item}' отсутствует в инвентаре."
+            message = f"Предмет '{item_name}' отсутствует в инвентаре."
             success = False
 
         return RedirectResponse(
