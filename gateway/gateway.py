@@ -119,7 +119,7 @@ async def delete_item(player_id: str, item: str = Form(...)):
     async with httpx.AsyncClient() as client:
         response = await client.post(
             f"{SERVICES['inventory']}/inventory/{player_id}/delete",
-            json={"item": item}
+            data={"item": item}
         )
         result = response.json()
         return RedirectResponse(

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, HTTPException
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -8,23 +8,28 @@ from fastapi.responses import RedirectResponse
 from fastapi import Cookie
 from typing import Optional
 from fastapi import Form
-
 import httpx
-
-
-import os
-from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
 STORAGE_SERVICE = "http://storage-service:8001"
 
-
-templates = Jinja2Templates(directory="gateway/templates")
-
+templates = Jinja2Templates(directory="templates")
 
 
+game_state = {}
 
+
+
+item = {
+    "id": "health_potion",
+    "name": "Зелье здоровья",
+    "category": "potion",
+    "weight": 0.5,
+    "rarity": "common",
+    "quantity": 1,
+    "effects": {"health": 50}
+}
 
 
 
@@ -60,70 +65,8 @@ def check_player_health(player_id: str) -> bool:
     return True
 
 
-@app.post("/inventory/{player_id}/delete")
-async def del_inventory(request: Request, player_id: str, item: str = Form(...)):
-    async with httpx.AsyncClient() as client:
-        response = await client.get(f"{STORAGE_SERVICE}/player/{player_id}")
-        if response.status_code == 404:
-            raise HTTPException(status_code=404, detail="Player not found")
-        player_data = response.json()
-        print(f"Player data: {player_data}")
-    if player_id in game_state:
-        player = game_state[player_id]
-        if item in player["inventory"]:
-            player["inventory"].remove(item)
-            message = f"Предмет {item} удален из инвентаря."
-            success = False
-        else:
-            message = f"Предмет {item} отсутствует в инвентаре."
-            success = False
-
-        return RedirectResponse(
-             url=f"/inventory/{player_id}?message={message}&success={success}",
-             status_code=303
-         )
-
-    return templates.TemplateResponse("inventory.html", {"request": request,"player": player,"message": message,"success": success})
 
 
-
-@app.post("/inventory/{player_id}/use")
-async def use_item(request: Request, player_id: str, item: str = Form(...)):
-    if player_id in game_state:
-        player = game_state[player_id]
-
-        if item in player["inventory"]:
-            if item == "зелье":
-                player["inventory"].remove(item)
-                player["mana"] += 10
-                message = f"Предмет '{item}' использован, +10% маны."
-                success = True
-            elif item == "руна":
-                player["inventory"].remove(item)
-                player["health"] += 50
-                message = f"Предмет '{item}' использован, +50 здоровья."
-                success = True
-            elif item == "ключ":
-                player["inventory"].remove(item)
-                player["health"] += 150
-                message = f"Предмет '{item}' использован, +150 здоровья."
-                success = True
-            else:
-                message = f"Предмет '{item}' нельзя использовать."
-                success = False                
-        else:
-            message = f"Предмет '{item}' отсутствует в инвентаре."
-            success = False
-
-        return RedirectResponse(
-            url=f"/inventory/{player_id}?message={message}&success={success}",
-            status_code=303
-        )
-
-    return RedirectResponse(url="/", status_code=303)
-
-
-   
 
 @app.get("/inventory/{player_id}/")
 async def get_inventory(request: Request, player_id: str, message: str = None, success: bool = None):
@@ -133,5 +76,69 @@ async def get_inventory(request: Request, player_id: str, message: str = None, s
     return RedirectResponse(url="/", status_code=303)
 
 
+
+@app.post("/inventory/{player_id}/use")
+async def use_item(request: Request, player_id: str, item: str = Form(...)):
+    async with httpx.AsyncClient() as client:
+        # Получаем данные игрока из storage service
+        response = await client.get(f"{STORAGE_SERVICE}/player/{player_id}")
+        if response.status_code == 404:
+            return RedirectResponse(url="/", status_code=303)
+        
+        player_data = response.json()
+        message = ""
+        success = False
+
+        if item in player_data["inventory"]:
+            if item == "зелье":
+                player_data["inventory"].remove(item)
+                player_data["mana"] += 10
+                message = f"Предмет '{item}' использован, +10% маны."
+                success = True
+            elif item == "руна":
+                player_data["inventory"].remove(item)
+                player_data["health"] += 50
+                message = f"Предмет '{item}' использован, +50 здоровья."
+                success = True
+            elif item == "ключ":
+                player_data["inventory"].remove(item)
+                player_data["health"] += 150
+                message = f"Предмет '{item}' использован, +150 здоровья."
+                success = True
+            else:
+                message = f"Предмет '{item}' нельзя использовать."
+                success = False
+                
+            if success:
+                # Обновляем данные в storage service только если были изменения
+                await client.put(f"{STORAGE_SERVICE}/player/{player_id}", json=player_data)
+        else:
+            message = f"Предмет '{item}' отсутствует в инвентаре."
+            success = False
+
+        return RedirectResponse(
+            url=f"/inventory/{player_id}?message={message}&success={success}",
+            status_code=303
+        )
+
+
+@app.post("/inventory/{player_id}/delete")
+async def del_inventory(request: Request, player_id: str, item: str = Form(...)):
+    async with httpx.AsyncClient() as client:
+        # Получаем данные игрока из storage service
+        response = await client.get(f"{STORAGE_SERVICE}/player/{player_id}")
+        if response.status_code == 404:
+            return {"message": "Игрок не найден", "status": "error"}
+        
+        player_data = response.json()
+        if item in player_data["inventory"]:
+            player_data["inventory"].remove(item)
+            # Обновляем данные в storage service
+            await client.put(f"{STORAGE_SERVICE}/player/{player_id}", json=player_data)
+            return {"message": f"Предмет {item} удален из инвентаря.", "status": "success"}
+        else:
+            return {"message": f"Предмет {item} отсутствует в инвентаре.", "status": "error"}
+
+
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8002) 
+    uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)
