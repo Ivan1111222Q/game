@@ -100,7 +100,6 @@ async def use_item(player_id: str, item: str = Form(...)):
         )
         try:
             result = response.json()
-            print(f"Ответ сервиса: {result}")
         except Exception as e:
             print(f"Ошибка при разборе JSON: {e}")
             return RedirectResponse(
@@ -109,7 +108,7 @@ async def use_item(player_id: str, item: str = Form(...)):
             )
 
         return RedirectResponse(
-            url=f"/inventory/{player_id}?message={result.get('message', 'Нет сообщения')}&success={result.get('status') == 'success'}",
+            url=f"/inventory/{player_id}?message={result['message']}&success={result['status'] == 'success'}",
             status_code=303
         )
 

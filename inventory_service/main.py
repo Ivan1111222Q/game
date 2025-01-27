@@ -83,51 +83,42 @@ async def use_item(player_id: str, item: dict):
         # Получаем данные игрока из storage service
         response = await client.get(f"{STORAGE_SERVICE}/player/{player_id}")
         if response.status_code == 404:
-            return RedirectResponse(
-                url=f"/inventory/{player_id}?message=Игрок не найден&success=false",
-                status_code=303
-            )
+            return {"message": "Игрок не найден", "status": "error"}
         
         player_data = response.json()
         item_name = item.get("item")
         
         if not item_name:
-            return RedirectResponse(
-                url=f"/inventory/{player_id}?message=Предмет не указан&success=false",
-                status_code=303
-            )
+            return {"message": "Предмет не указан", "status": "error"}
 
         if item_name in player_data["inventory"]:
             if item_name == "зелье":
                 player_data["inventory"].remove(item_name)
                 player_data["mana"] += 10
                 message = f"Предмет '{item_name}' использован, +10% маны."
-                success = True
+                success = "success"
             elif item_name == "руна":
                 player_data["inventory"].remove(item_name)
                 player_data["health"] += 50
                 message = f"Предмет '{item_name}' использован, +50 здоровья."
-                success = True
+                success = "success"
             elif item_name == "ключ":
                 player_data["inventory"].remove(item_name)
                 player_data["health"] += 150
                 message = f"Предмет '{item_name}' использован, +150 здоровья."
-                success = True
+                success = "success"
             else:
                 message = f"Предмет '{item_name}' нельзя использовать."
-                success = False
+                success = "error"
                 
-            if success:
+            if success == "success":
                 # Обновляем данные в storage service только если были изменения
                 await client.put(f"{STORAGE_SERVICE}/player/{player_id}", json=player_data)
         else:
             message = f"Предмет '{item_name}' отсутствует в инвентаре."
-            success = False
+            success = "error"
 
-        return RedirectResponse(
-            url=f"/inventory/{player_id}?message={message}&success={success}",
-            status_code=303
-        )
+        return {"message": message, "status": success}
 
 
 @app.post("/inventory/{player_id}/delete")
