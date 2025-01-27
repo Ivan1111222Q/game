@@ -14,10 +14,7 @@ app = FastAPI()
 
 STORAGE_SERVICE = "http://storage-service:8001"
 
-templates = Jinja2Templates(directory="templates")
 
-
-game_state = {}
 
 
 

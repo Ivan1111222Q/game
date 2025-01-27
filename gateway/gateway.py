@@ -130,18 +130,16 @@ async def delete_item(player_id: str, item: str = Form(...)):
 @app.get("/lake/{player_id}")
 async def get_lake(request: Request, player_id: str, message: str = None, success: bool = None):
     async with httpx.AsyncClient() as client:
+        # Получаем данные игрока
         response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
         if response.status_code == 404:
             return RedirectResponse(url="/")
         player_data = response.json()
-        
-        location_response = await client.get(f"{SERVICES['location']}/location/lake")
-        location_data = location_response.json()
+        player_data['player_id'] = player_id  # Добавляем player_id в данные
         
         return templates.TemplateResponse("lake.html", {
             "request": request,
             "player": player_data,
-            "location": location_data,
             "message": message,
             "success": success
         })
@@ -149,15 +147,35 @@ async def get_lake(request: Request, player_id: str, message: str = None, succes
 @app.post("/lake/{player_id}/choice")
 async def lake_choice(player_id: str, direction: str = Form(...)):
     async with httpx.AsyncClient() as client:
-        response = await client.post(
-            f"{SERVICES['location']}/location/lake/{player_id}/action",
-            json={"action": direction}
-        )
-        result = response.json()
-        return RedirectResponse(
-            url=f"/lake/{player_id}?message={result['message']}&success={result['success']}",
-            status_code=303
-        )
+        try:
+            response = await client.post(
+                f"{SERVICES['location']}/location/lake/{player_id}/action",
+                json={"action": direction}
+            )
+            result = response.json()
+            
+            # Если игрок погиб, получаем его данные для отображения game_over
+            if not result["success"] and "погибли" in result["message"]:
+                player_response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
+                if player_response.status_code == 200:
+                    player_data = player_response.json()
+                    return templates.TemplateResponse("game_over.html", {
+                        "request": Request,
+                        "player": player_data,
+                        "message": result["message"]
+                    })
+                
+            return RedirectResponse(
+                url=f"/lake/{player_id}?message={result['message']}&success={result['success']}",
+                status_code=303
+            )
+        except Exception as e:
+            print(f"Ошибка при обработке запроса: {e}")
+            return RedirectResponse(
+                url=f"/lake/{player_id}?message=Произошла ошибка&success=false",
+                status_code=303
+            )
+
 
 @app.get("/riddle/{player_id}")
 async def get_riddle(request: Request, player_id: str, message: str = None, success: bool = None):
