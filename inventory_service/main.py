@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -9,29 +9,22 @@ from fastapi import Cookie
 from typing import Optional
 from fastapi import Form
 
+import httpx
+
+
 import os
 from fastapi.templating import Jinja2Templates
 
 app = FastAPI()
 
-
-templates = Jinja2Templates(directory="/gateway/templates")
-# templates = Jinja2Templates(directory=os.path.join(os.path.dirname(os.path.abspath(__file__)), "../templates"))
+STORAGE_SERVICE = "http://storage-service:8001"
 
 
-game_state = {}
+templates = Jinja2Templates(directory="gateway/templates")
 
 
 
-item = {
-    "id": "health_potion",
-    "name": "Зелье здоровья",
-    "category": "potion",
-    "weight": 0.5,
-    "rarity": "common",
-    "quantity": 1,
-    "effects": {"health": 50}
-}
+
 
 
 
@@ -67,10 +60,14 @@ def check_player_health(player_id: str) -> bool:
     return True
 
 
-
-
 @app.post("/inventory/{player_id}/delete")
 async def del_inventory(request: Request, player_id: str, item: str = Form(...)):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(f"{STORAGE_SERVICE}/player/{player_id}")
+        if response.status_code == 404:
+            raise HTTPException(status_code=404, detail="Player not found")
+        player_data = response.json()
+        print(f"Player data: {player_data}")
     if player_id in game_state:
         player = game_state[player_id]
         if item in player["inventory"]:

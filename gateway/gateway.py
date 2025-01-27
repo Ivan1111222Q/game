@@ -35,7 +35,7 @@ async def start_game():
     player_data = {
         "health": 100,
         "mana": 100,
-        "inventory": [],
+        "inventory": ['ключ'],
         "max_capacity": 10,
         "max_weight": 10.0,
         "current_weight": 0.0,
@@ -57,6 +57,7 @@ async def get_game(request: Request, player_id: str):
         if response.status_code == 404:
             return RedirectResponse(url="/")
         player_data = response.json()
+        player_data['player_id'] = player_id
         return templates.TemplateResponse("game.html", {
             "request": request,
             "player": player_data
@@ -69,12 +70,26 @@ async def get_inventory(request: Request, player_id: str, message: str = None, s
         if response.status_code == 404:
             return RedirectResponse(url="/")
         player_data = response.json()
+        player_data['player_id'] = player_id
         return templates.TemplateResponse("inventory.html", {
             "request": request,
             "player": player_data,
             "message": message,
             "success": success
         })
+
+# @app.post("/inventory/{player_id}/use")
+# async def use_item(player_id: str, item: str = Form(...)):
+#     async with httpx.AsyncClient() as client:
+#         response = await client.post(
+#             f"{SERVICES['inventory']}/inventory/{player_id}/use",
+#             json={"item": item}
+#         )
+#         result = response.json()
+#         return RedirectResponse(
+#             url=f"/inventory/{player_id}?message={result['message']}&success={result['status'] == 'success'}",
+#             status_code=303
+#         )
 
 @app.post("/inventory/{player_id}/use")
 async def use_item(player_id: str, item: str = Form(...)):
@@ -83,11 +98,35 @@ async def use_item(player_id: str, item: str = Form(...)):
             f"{SERVICES['inventory']}/inventory/{player_id}/use",
             json={"item": item}
         )
+        try:
+            result = response.json()
+            print(f"Ответ сервиса: {result}")
+        except Exception as e:
+            print(f"Ошибка при разборе JSON: {e}")
+            return RedirectResponse(
+                url=f"/inventory/{player_id}?message=Ошибка сервиса&success=false",
+                status_code=303
+            )
+
+        return RedirectResponse(
+            url=f"/inventory/{player_id}?message={result.get('message', 'Нет сообщения')}&success={result.get('status') == 'success'}",
+            status_code=303
+        )
+
+
+@app.post("/inventory/{player_id}/delete")
+async def delete_item(player_id: str, item: str = Form(...)):
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{SERVICES['inventory']}/inventory/{player_id}/delete",
+            json={"item": item}
+        )
         result = response.json()
         return RedirectResponse(
             url=f"/inventory/{player_id}?message={result['message']}&success={result['status'] == 'success'}",
             status_code=303
         )
+
 
 @app.get("/lake/{player_id}")
 async def get_lake(request: Request, player_id: str, message: str = None, success: bool = None):

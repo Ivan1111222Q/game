@@ -71,7 +71,7 @@
             <div>🎒 Инвентарь: {{ player.inventory|join(', ') if player.inventory else 'пусто' }}</div>
         </div>
 
-        <div class="action-buttons">
+        <div class="action-buttons">   
             <form action="/lake/{{ player.player_id }}" method="get">
                 <input type="hidden" name="action" value="lake">
                 <button type="submit" class="action-btn">🏞️ Отправиться к озеру</button>
