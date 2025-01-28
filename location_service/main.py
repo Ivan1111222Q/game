@@ -20,77 +20,51 @@ STORAGE_SERVICE = "http://storage-service:8001"
 
 
 
-
 @app.post("/location/lake/{player_id}/action")
-async def lake_action(player_id: str, action: dict = Body(...)):
-    async with httpx.AsyncClient() as client:
+async def lake_action(player_id: str,action: dict = Body(...)):
+     async with httpx.AsyncClient() as client:
         # Получаем данные игрока из storage service
         response = await client.get(f"{STORAGE_SERVICE}/player/{player_id}")
         if response.status_code == 404:
             return {"message": "Игрок не найден", "success": False}
-        
+
         player_data = response.json()
-   
+        item_name = action.get("action")
 
+        # Обрабатываем действия в зависимости от направления
+        if item_name == "forward":
+            player_data["health"] -= 20
+            message = "Вы поплыли прямо и наткнулись на корягу, -20 здоровья."
+        elif item_name == "right":
+            player_data["mana"] += 10
+            message = "Вы поплыли направо и нашли руну, +10 маны."
+            if "руна" not in player_data["inventory"]:
+                player_data["inventory"].append("руна")
+                message += " Руна добавлена в инвентарь!"
+        elif item_name == "left":
+            if "зелье" in player_data["inventory"]:
+                player_data["health"] += 50
+                player_data["inventory"].remove("зелье")
+                message = "Вы поплыли налево, испили зелье, +50 здоровья. Зелье закончилось."
+            else:
+                player_data["health"] -= 10
+                message = "Вы поплыли налево, но ничего не нашли, -10 здоровья."
+        elif item_name == "back":
+            player_data["inventory"].append("зелье")
+            message = "Вы решили поплыть назад и нашли зелье."
+        else:
+            return {"message": "Неизвестное направление", "success": False}
 
+        # Проверяем здоровье игрока
+        if player_data["health"] <= 0:
+            message += " Вы погибли от ран, игра окончена!"
 
+        # Сохраняем обновлённые данные игрока
+        await client.put(f"{STORAGE_SERVICE}/player/{player_id}", json=player_data)
 
-
-# @app.post("/lake/{player_id}/choice")
-# async def lake_choice(request: Request, player_id: str, direction: str = Form(...)):
-#    async with httpx.AsyncClient() as client:
-#         # Получаем данные игрока из storage service
-#         response = await client.get(f"{STORAGE_SERVICE}/player/{player_id}")
-#         if response.status_code == 404:
-#             return {"message": "Игрок не найден", "status": "error"}
-
-#     player = game_state[player_id]
-#     message = ""
-#     success = True
-
-#     if direction == "forward":
-#         player["health"] -= 20
-#         message = "Вы поплыли прямо и наткнулись на корягу, -20 здоровья."
-#         if player["health"] <= 0:
-#             if not check_player_health(player_id):
-#                 return templates.TemplateResponse("game_over.html", {"request": request})
-#             message += " Вы погибли от ран, игра окончена!"
-#             success = False
-
-#     elif direction == "right":
-#         player["mana"] += 10
-#         message = "Вы поплыли направо и нашли руну, +10 маны."
-#         if "руна" not in player["inventory"]:
-#             player["inventory"].append("руна")
-#             message += " Руна добавлена в инвентарь!"
-
-#     elif direction == "left":
-#         if "зелье" in player["inventory"]:
-#             player["health"] += 50
-#             player["inventory"].remove("зелье")
-#             message = "Вы поплыли налево, испили зелье, +50 здоровья. Зелье закончилось."
-#         else:
-#             player["health"] -= 10
-#             if not check_player_health(player_id): 
-#                 return templates.TemplateResponse("game_over.html", {"request": request})
-#             message = "Вы поплыли налево, но ничего не нашли, -10 здоровья."
-        
-#         if player["health"] <= 0:
-#             if not check_player_health(player_id):  
-#                 return templates.TemplateResponse("game_over.html", {"request": request})
-#             message += " Вы погибли от ран, игра окончена!"
-#             success = False
-
-#     elif direction == "back":
-#         player["inventory"].append("зелье")
-#         message = "Вы решили поплыть назад и нашли зелье."
-
-#     else:
-#         return RedirectResponse(url="/", status_code=303)
-
-#     return templates.TemplateResponse("lake.html", {"request": request,"player": player,"message": message,"success": success})
+        return {"message": message, "success": True}
 
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8004) 
+    uvicorn.run(app, host="0.0.0.0", port=8004)  
