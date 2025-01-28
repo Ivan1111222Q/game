@@ -18,8 +18,7 @@ STORAGE_SERVICE = "http://storage-service:8001"
 
 
 @app.post("/riddle/{player_id}/check")
-async def answer_riddle(
-    request: Request, player_id: str, riddle_id: str = Form(...), answer: str = Form(...)):
+async def answer_riddle(player_id: str, riddle_id: str = Form(...), answer: str = Form(...)):
     async with httpx.AsyncClient() as client:
         response = await client.get(f"{STORAGE_SERVICE}/player/{player_id}")
         if response.status_code == 404:
@@ -35,6 +34,7 @@ async def answer_riddle(
         }
 
         riddle = riddles.get(riddle_id)
+        
         if not riddle:
             return {"message": "Загадка не найдена", "success": False}
 
