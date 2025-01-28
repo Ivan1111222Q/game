@@ -23,7 +23,6 @@ STORAGE_SERVICE = "http://storage-service:8001"
 @app.post("/location/lake/{player_id}/action")
 async def lake_action(player_id: str,action: dict = Body(...)):
      async with httpx.AsyncClient() as client:
-        # Получаем данные игрока из storage service
         response = await client.get(f"{STORAGE_SERVICE}/player/{player_id}")
         if response.status_code == 404:
             return {"message": "Игрок не найден", "success": False}
@@ -31,7 +30,7 @@ async def lake_action(player_id: str,action: dict = Body(...)):
         player_data = response.json()
         item_name = action.get("action")
 
-        # Обрабатываем действия в зависимости от направления
+        
         if item_name == "forward":
             player_data["health"] -= 20
             message = "Вы поплыли прямо и наткнулись на корягу, -20 здоровья."
@@ -55,11 +54,10 @@ async def lake_action(player_id: str,action: dict = Body(...)):
         else:
             return {"message": "Неизвестное направление", "success": False}
 
-        # Проверяем здоровье игрока
+        
         if player_data["health"] <= 0:
             message += " Вы погибли от ран, игра окончена!"
 
-        # Сохраняем обновлённые данные игрока
         await client.put(f"{STORAGE_SERVICE}/player/{player_id}", json=player_data)
 
         return {"message": message, "success": True}
