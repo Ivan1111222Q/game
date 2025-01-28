@@ -46,31 +46,10 @@ def initialize_player(player_id):
     return player
 
 
-def add_to_inventory(player_id: str, item: str):
-    if player_id in game_state:
-       game_state[player_id]['inventory'].append(item)
-       return True
-    return False
-
-def check_player_health(player_id: str) -> bool:
-  
-    if player_id in game_state:
-        player = game_state[player_id]
-        if player["health"] <= 0:
-            del game_state[player_id]  
-            return False
-    return True
 
 
 
 
-
-@app.get("/inventory/{player_id}/")
-async def get_inventory(request: Request, player_id: str, message: str = None, success: bool = None):
-    if player_id in game_state:
-        player = game_state[player_id]
-        return templates.TemplateResponse("inventory.html", {"request": request, "player": player, "message": message, "success": success})
-    return RedirectResponse(url="/", status_code=303)
 
 
 

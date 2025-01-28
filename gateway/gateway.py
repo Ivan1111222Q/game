@@ -17,6 +17,12 @@ SERVICES = {
     "location": "http://location-service:8004"
 }
 
+# ridle_service 
+riddles = [
+    {"id": "1", "text": "Цвет неба", "answer": "голубое"},
+    {"id": "2", "text": "Какой огонь", "answer": "горячий"}
+]
+
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request, player_id: Optional[str] = Cookie(None)):
     if player_id:
@@ -78,18 +84,6 @@ async def get_inventory(request: Request, player_id: str, message: str = None, s
             "success": success
         })
 
-# @app.post("/inventory/{player_id}/use")
-# async def use_item(player_id: str, item: str = Form(...)):
-#     async with httpx.AsyncClient() as client:
-#         response = await client.post(
-#             f"{SERVICES['inventory']}/inventory/{player_id}/use",
-#             json={"item": item}
-#         )
-#         result = response.json()
-#         return RedirectResponse(
-#             url=f"/inventory/{player_id}?message={result['message']}&success={result['status'] == 'success'}",
-#             status_code=303
-#         )
 
 @app.post("/inventory/{player_id}/use")
 async def use_item(player_id: str, item: str = Form(...)):
@@ -177,24 +171,27 @@ async def lake_choice(player_id: str, direction: str = Form(...)):
             )
 
 
+
+
 @app.get("/riddle/{player_id}")
 async def get_riddle(request: Request, player_id: str, message: str = None, success: bool = None):
     async with httpx.AsyncClient() as client:
         player_response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
         if player_response.status_code == 404:
             return RedirectResponse(url="/")
+        
         player_data = player_response.json()
         
-        riddle_response = await client.get(f"{SERVICES['riddle']}/riddle/random")
-        riddle_data = riddle_response.json()
+        riddle = random.choice(riddles)
         
         return templates.TemplateResponse("riddle.html", {
             "request": request,
             "player": player_data,
-            "riddle": riddle_data,
+            "riddle": riddle,
             "message": message,
             "success": success
         })
+
 
 @app.post("/riddle/{player_id}/answer")
 async def answer_riddle(player_id: str, riddle_id: str = Form(...), answer: str = Form(...)):
