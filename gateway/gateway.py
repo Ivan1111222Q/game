@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 import httpx
 from typing import Optional
 import random
+from fastapi import Body
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -173,15 +174,37 @@ async def lake_choice(player_id: str, direction: str = Form(...)):
 
 
 
+# @app.get("/riddle/{player_id}")
+# async def get_riddle(request: Request, player_id: str, message: str = None, success: bool = None):
+#     async with httpx.AsyncClient() as client:
+#         player_response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
+#         if player_response.status_code == 404:
+#             return RedirectResponse(url="/")
+        
+#         player_data = player_response.json()
+        
+#         riddle = random.choice(riddles)
+        
+#         return templates.TemplateResponse("riddle.html", {
+#             "request": request,
+#             "player": player_data,
+#             "riddle": riddle,
+#             "message": message,
+#             "success": success
+#         })
+
+
+
 @app.get("/riddle/{player_id}")
-async def get_riddle(request: Request, player_id: str, message: str = None, success: bool = None):
+async def get_lake(request: Request, player_id: str, message: str = None, success: bool = None):
     async with httpx.AsyncClient() as client:
-        player_response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
-        if player_response.status_code == 404:
+        # Получаем данные игрока
+        response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
+        if response.status_code == 404:
             return RedirectResponse(url="/")
-        
-        player_data = player_response.json()
-        
+        player_data = response.json()
+        player_data['player_id'] = player_id  # Добавляем player_id в данные
+
         riddle = random.choice(riddles)
         
         return templates.TemplateResponse("riddle.html", {
@@ -220,46 +243,41 @@ async def get_riddle(request: Request, player_id: str, message: str = None, succ
 async def answer_riddle(request: Request, player_id: str, riddle_id: str = Form(...), answer: str = Form(...)):
     async with httpx.AsyncClient() as client:
         try:
-            # Получаем данные игрока
-            player_response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
-            if player_response.status_code != 200:
-                return templates.TemplateResponse("riddle_result.html", {
-                    "request": Request,
-                    "player": None,
-                    "riddle": None,
-                    "message": "Игрок не найден."
-                })
-            player_data = player_response.json()
-
-            # Проверяем ответ на загадку
-            response = await client.post(
-                f"{SERVICES['riddle']}/riddle/{player_id}/check",
-                json={"riddle_id": riddle_id, "answer": answer}
-            )
-            response.raise_for_status()
+            response = await client.post(f"{SERVICES['riddle']}/riddle/{player_id}/check",
+                              json={"riddle_id": riddle_id, "answer": answer},
+                                        )
             result = response.json()
 
-            return templates.TemplateResponse("riddle_result.html", {
-                "request": request,
-                "player": player_data,
-                "riddle": result['riddle'],
-                "message": result['message']
-            })
 
-        except httpx.HTTPStatusError as e:
-            return templates.TemplateResponse("riddle_result.html", {
-                "request": request,
-                "player": None,
-                "riddle": None,
-                "message": f"Ошибка сервиса: {e.response.status_code}"
-            })
-        except httpx.RequestError as e:
-            return templates.TemplateResponse("riddle_result.html", {
-                "request": request,
-                "player": None,
-                "riddle": None,
-                "message": f"Ошибка соединения: {str(e)}"
-            })
+            if not result["success"] and "погибли" in result["message"]:
+             player_response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
+             if player_response.status_code != 200:
+               player_data = player_response.json()
+               return templates.TemplateResponse("game_over.html", {
+                        "request": Request,
+                        "player": player_data,
+                        "message": result["message"]
+                    })
+
+
+            # return templates.TemplateResponse("riddle.html", {
+            #     "request": request,
+            #     "player": player_data,
+            #     "riddle": result['riddle'],
+            #     "message": result['message']
+            # })
+
+        # 
+            return RedirectResponse(
+                url=f"/riddle/{player_id}?message={result['message']}&success={result['success']}",
+                status_code=303
+            )
+        except Exception as e:
+            print(f"Ошибка при обработке запроса: {e}")
+            return RedirectResponse(
+                url=f"/riddle/{player_id}?message=Произошла ошибка&success=false",
+                status_code=303
+            )
 
 
 
