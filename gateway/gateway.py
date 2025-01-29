@@ -193,18 +193,76 @@ async def get_riddle(request: Request, player_id: str, message: str = None, succ
         })
 
 
+# @app.post("/riddle/{player_id}/answer")
+# async def answer_riddle(player_id: str, riddle_id: str = Form(...), answer: str = Form(...)):
+#     async with httpx.AsyncClient() as client:
+#         response = await client.post(
+#             f"{SERVICES['riddle']}/riddle/{player_id}/check",
+#             json={"riddle_id": riddle_id, "answer": answer})
+        
+#         player_data = player_response.json()
+#         result = response.json()
+
+#         # return RedirectResponse(
+#         #     url=f"/riddle/{player_id}?message={result['message']}&success={result['correct']}",
+#         #     status_code=303
+#         # )
+
+#     return templates.TemplateResponse("riddle_result.html", {
+#             "request": Request,
+#             "player": player_data,
+#             "riddle": result['riddle'],
+#             "message": result['message']})
+
+
+
 @app.post("/riddle/{player_id}/answer")
-async def answer_riddle(player_id: str, riddle_id: str = Form(...), answer: str = Form(...)):
+async def answer_riddle(request: Request, player_id: str, riddle_id: str = Form(...), answer: str = Form(...)):
     async with httpx.AsyncClient() as client:
-        response = await client.post(
-            f"{SERVICES['riddle']}/riddle/{player_id}/check",
-            json={"riddle_id": riddle_id, "answer": answer}
-        )
-        result = response.json()
-        return RedirectResponse(
-            url=f"/riddle/{player_id}?message={result['message']}&success={result['correct']}",
-            status_code=303
-        )
+        try:
+            # Получаем данные игрока
+            player_response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
+            if player_response.status_code != 200:
+                return templates.TemplateResponse("riddle_result.html", {
+                    "request": Request,
+                    "player": None,
+                    "riddle": None,
+                    "message": "Игрок не найден."
+                })
+            player_data = player_response.json()
+
+            # Проверяем ответ на загадку
+            response = await client.post(
+                f"{SERVICES['riddle']}/riddle/{player_id}/check",
+                json={"riddle_id": riddle_id, "answer": answer}
+            )
+            response.raise_for_status()
+            result = response.json()
+
+            return templates.TemplateResponse("riddle_result.html", {
+                "request": request,
+                "player": player_data,
+                "riddle": result['riddle'],
+                "message": result['message']
+            })
+
+        except httpx.HTTPStatusError as e:
+            return templates.TemplateResponse("riddle_result.html", {
+                "request": request,
+                "player": None,
+                "riddle": None,
+                "message": f"Ошибка сервиса: {e.response.status_code}"
+            })
+        except httpx.RequestError as e:
+            return templates.TemplateResponse("riddle_result.html", {
+                "request": request,
+                "player": None,
+                "riddle": None,
+                "message": f"Ошибка соединения: {str(e)}"
+            })
+
+
+
 
 if __name__ == "__main__":
     import uvicorn
