@@ -17,6 +17,18 @@ app = FastAPI()
 STORAGE_SERVICE = "http://storage-service:8001"
 
 
+@app.get("/riddle/get_riddle")
+async def answer_riddle():
+
+    riddles = [
+    {"id": "1", "text": "Цвет неба", "answer": "голубое"},
+    {"id": "2", "text": "Какой огонь", "answer": "горячий"}
+              ]
+    riddle_id = random.choice(riddles)
+    
+
+    return {"riddle": riddle_id}
+
 @app.post("/riddle/{player_id}/check")
 async def answer_riddle(player_id: str, riddle_id: str = Body(...), answer: str = Body(...)):
     async with httpx.AsyncClient() as client:

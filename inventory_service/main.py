@@ -47,12 +47,6 @@ def initialize_player(player_id):
 
 
 
-
-
-
-
-
-
 @app.post("/inventory/{player_id}/use")
 async def use_item(player_id: str, item: dict):
     async with httpx.AsyncClient() as client:

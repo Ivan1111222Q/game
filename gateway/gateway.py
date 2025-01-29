@@ -19,10 +19,10 @@ SERVICES = {
 }
 
 # ridle_service 
-riddles = [
-    {"id": "1", "text": "Цвет неба", "answer": "голубое"},
-    {"id": "2", "text": "Какой огонь", "answer": "горячий"}
-]
+# riddles = [
+#     {"id": "1", "text": "Цвет неба", "answer": "голубое"},
+#     {"id": "2", "text": "Какой огонь", "answer": "горячий"}
+# ]
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request, player_id: Optional[str] = Cookie(None)):
@@ -182,7 +182,13 @@ async def get_lake(request: Request, player_id: str, message: str = None, succes
         player_data = response.json()
         player_data['player_id'] = player_id
 
-        riddle = random.choice(riddles)
+        response = await client.get(f"{SERVICES['riddle']}/riddle/get_riddle")
+        response = response.json()
+
+    
+        riddle = response['riddle']
+
+
         
         return templates.TemplateResponse("riddle.html", {
             "request": request,
