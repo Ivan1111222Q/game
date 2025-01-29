@@ -45,7 +45,7 @@ async def answer_riddle(player_id: str, riddle_id: str = Body(...), answer: str 
             success = True
         else:
             player_data["health"] -= 50
-            message = "Неправильный ответ. Попробуйте снова."
+            message = "Неправильный ответ. Попробуйте снова -50% здоровья."
             success = False
 
         await client.put(f"{STORAGE_SERVICE}/player/{player_id}", json=player_data)    
