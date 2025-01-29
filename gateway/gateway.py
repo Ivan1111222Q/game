@@ -176,12 +176,11 @@ async def lake_choice(player_id: str, direction: str = Form(...)):
 @app.get("/riddle/{player_id}")
 async def get_lake(request: Request, player_id: str, message: str = None, success: bool = None):
     async with httpx.AsyncClient() as client:
-        # Получаем данные игрока
         response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
         if response.status_code == 404:
             return RedirectResponse(url="/")
         player_data = response.json()
-        player_data['player_id'] = player_id  # Добавляем player_id в данные
+        player_data['player_id'] = player_id
 
         riddle = random.choice(riddles)
         
