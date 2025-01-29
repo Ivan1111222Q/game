@@ -173,28 +173,6 @@ async def lake_choice(player_id: str, direction: str = Form(...)):
 
 
 
-
-# @app.get("/riddle/{player_id}")
-# async def get_riddle(request: Request, player_id: str, message: str = None, success: bool = None):
-#     async with httpx.AsyncClient() as client:
-#         player_response = await client.get(f"{SERVICES['storage']}/player/{player_id}")
-#         if player_response.status_code == 404:
-#             return RedirectResponse(url="/")
-        
-#         player_data = player_response.json()
-        
-#         riddle = random.choice(riddles)
-        
-#         return templates.TemplateResponse("riddle.html", {
-#             "request": request,
-#             "player": player_data,
-#             "riddle": riddle,
-#             "message": message,
-#             "success": success
-#         })
-
-
-
 @app.get("/riddle/{player_id}")
 async def get_lake(request: Request, player_id: str, message: str = None, success: bool = None):
     async with httpx.AsyncClient() as client:
@@ -215,27 +193,6 @@ async def get_lake(request: Request, player_id: str, message: str = None, succes
             "success": success
         })
 
-
-# @app.post("/riddle/{player_id}/answer")
-# async def answer_riddle(player_id: str, riddle_id: str = Form(...), answer: str = Form(...)):
-#     async with httpx.AsyncClient() as client:
-#         response = await client.post(
-#             f"{SERVICES['riddle']}/riddle/{player_id}/check",
-#             json={"riddle_id": riddle_id, "answer": answer})
-        
-#         player_data = player_response.json()
-#         result = response.json()
-
-#         # return RedirectResponse(
-#         #     url=f"/riddle/{player_id}?message={result['message']}&success={result['correct']}",
-#         #     status_code=303
-#         # )
-
-#     return templates.TemplateResponse("riddle_result.html", {
-#             "request": Request,
-#             "player": player_data,
-#             "riddle": result['riddle'],
-#             "message": result['message']})
 
 
 
@@ -260,14 +217,6 @@ async def answer_riddle(request: Request, player_id: str, riddle_id: str = Form(
                     })
 
 
-            # return templates.TemplateResponse("riddle.html", {
-            #     "request": request,
-            #     "player": player_data,
-            #     "riddle": result['riddle'],
-            #     "message": result['message']
-            # })
-
-        # 
             return RedirectResponse(
                 url=f"/riddle/{player_id}?message={result['message']}&success={result['success']}",
                 status_code=303
