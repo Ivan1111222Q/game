@@ -23,20 +23,20 @@ key = ["home","situ","zavod"]
 velu = [5,10,8]
 
 
-# cret_dict(key,velu)
+cret_dict(key,velu)
 
 credits = cret_dict(key,velu)
 
 
-# Добавить 2 к значению ключа "home" в словаре credits
+
 change(credits, "home", 8, "add")
 print(credits)
 
-# Вычесть 3 из значения ключа "situ" в словаре credits
+
 change(credits, "situ", 1, "delete")
 print(credits)
 
-# Добавить 5 к значению ключа "zavod" в словаре credits
+
 change(credits, "zavod", 15, "add")
 print(credits)
 

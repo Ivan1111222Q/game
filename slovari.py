@@ -80,12 +80,12 @@ import copy
 # some("eteter")
 
 
-# def clear_build (city, building_type, district):
-#     if building_type in city[district]:
-#             del city[district][building_type]
-#             print(f"Снесены все {building_type} из {district}")
-#     else:
-#         print(f"Ошибка: Недостаточно зданий {building_type} в районе {district}")
+def clear_build (city, building_type, district):
+    if building_type in city[district]:
+            del city[district][building_type]
+            print(f"Снесены все {building_type} из {district}")
+    else:
+        print(f"Ошибка: Недостаточно зданий {building_type} в районе {district}")
    
 
 
@@ -133,8 +133,7 @@ city = {
 
 
 
-# clear_build(city, "shops","downtown")
-# print(city)
+
 
 
 # Сносим 10 домов в районе downtown
@@ -178,5 +177,8 @@ print(city)
 add_stroika(city, "farms", "industrial_zone", 5)
 print(city)
 
+
+clear_build(city, "shops","downtown")
+print(city)
 
 

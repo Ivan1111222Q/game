@@ -18,7 +18,7 @@ student_grades = {
 
 for name in student_grades:
     
-        t = student_grades["Math"]
+        t = student_grades[name]["Math"]
         # o = student_grades[name]["Science"]
         # p = student_grades[name]["History"]
 

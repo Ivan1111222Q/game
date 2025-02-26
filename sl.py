@@ -47,7 +47,8 @@
 
 
 
-def prit_rezultat(name, family, middle):
+def prit_rezultat(name: str, family: str, middle: str ) -> float :
+   """Выводит приветствие для имени, по умолчанию для 'User'."""
    rezalt = f"Привет {name} {family} {middle}"
    last = f"Всего хорошего {name}"
    return rezalt, last
@@ -60,3 +61,30 @@ print(print_e[0])
 
 print_r = prit_rezultat("Potter", "Gtyu", "Fdsd")
 print(print_r[1])
+
+prit_rezultat()
+
+
+
+# def function_name(param1: type, param2: type) -> return_type:
+#     # Тело функции
+#     return value
+
+
+
+global_var = "global"
+
+def outer_function():
+    enclosing_var = "enclosing"
+
+    def inner_function():
+        local_var = "local"
+        print(local_var)     # Local
+        print(enclosing_var) # Enclosing
+        print(global_var)    # Global
+
+    inner_function()
+    print(global_var)        # Global
+
+outer_function()
+print(global_var)            # Global
