@@ -105,7 +105,6 @@ def add_book():
           }
          
          print(f"Книга успешно добавлена с ID: {new_id}")
-         print(library.keys())
          break 
  
       
