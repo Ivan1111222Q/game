@@ -116,8 +116,14 @@ def show_books():
  while True:
      print("\n===== ВСЕ КНИГИ В БИБЛИОТЕКЕ =====")
      for book_id, book in library["books"].items():
-         print(f"ID: {book_id} - Название: {book['title']}, Автор: {book['author']}, Жанр: {book['genre']}, Год издания: {book['year']}, Рейтинг: {book['rating']}, Списки: {', '.join(book['lists'])}")
-         print("----------------------------------------")
+         print(f"\nID: {book_id} ") 
+         print(f"\nНазвание: {book['title']}")
+         print(f"\nАвтор: {book['author']}")
+         print(f"\nЖанр: {book['genre']}")
+         print(f"\nГод издания: {book['year']}")
+         print(f"\nРейтинг: {book['rating']}")
+         print(f"\nСписки: {', '.join(book['lists'])}")
+         print("\n----------------------------------------")
      break        
     
     
@@ -149,7 +155,13 @@ def edit_book():
         continue
     if book_id in library["books"]:
         print("Информация о книге:")
-        print(f"ID: {book_id} - Название: {library['books'][book_id]['title']}, Автор: {library['books'][book_id]['author']}, Жанр: {library['books'][book_id]['genre']}, Год издания: {library['books'][book_id]['year']}, Рейтинг: {library['books'][book_id]['rating']}, Списки: {', '.join(library['books'][book_id]['lists'])}")
+        print(f"\nID: {book_id}")
+        print(f"\nНазвание: {library['books'][book_id]['title']}")
+        print(f"\nАвтор: {library['books'][book_id]['author']}")
+        print(f"\nЖанр: {library['books'][book_id]['genre']}")
+        print(f"\nГод издания: {library['books'][book_id]['year']}")
+        print(f"\nРейтинг: {library['books'][book_id]['rating']}")
+        print(f"\nСписки: {', '.join(library['books'][book_id]['lists'])}")
         print("----------------------------------------")
         new_title = input("Новое название (если не изменяется, оставьте поле пустым): ")
         new_author = input("Новый автор (если не изменяется, оставьте поле пустым): ")
@@ -200,42 +212,78 @@ def search_books():
       choice1 = input("Ведите автора: ")
       for book_id, book in library["books"].items():
           if choice1.lower() == book["author"].lower():
-              print(f"ID: {book_id} - Название: {book['title']}, Автор: {book['author']}, ��анр: {book['genre']}, ��од издания: {book['year']}, Рейтинг: {book['rating']}, Списки: {', '.join(book['lists'])}")
-              print("----------------------------------------")
+              print(f"\nID: {book_id}")
+              print(f"\nНазвание: {book['title']}")
+              print(f"\nАвтор: {book['author']}")
+              print(f"\nЖанр: {book['genre']}")
+              print(f"\nГод издания: {book['year']}")
+              print(f"\nРейтинг: {book['rating']}")
+              print(f"\nСписки: {', '.join(book['lists'])}")
+              print("\n----------------------------------------")
     if choice == "1":
        choice1 = input("Введите название: ")
        for book_id, book in library["books"].items():
            if choice1.lower() == book["title"].lower():
-               print(f"ID: {book_id} - Название: {book['title']}, Автор: {book['author']}, ��анр: {book['genre']}, ��од издания: {book['year']}, Рейтинг: {book['rating']}, Списки: {', '.join(book['lists'])}")
-               print("----------------------------------------")
+              print(f"\nID: {book_id}")
+              print(f"\nНазвание: {book['title']}")
+              print(f"\nАвтор: {book['author']}")
+              print(f"\nЖанр: {book['genre']}")
+              print(f"\nГод издания: {book['year']}")
+              print(f"\nРейтинг: {book['rating']}")
+              print(f"\nСписки: {', '.join(book['lists'])}")
+              print("\n----------------------------------------")
     if choice == "3":
        choice1 = input("Введите жанр: ")
        for book_id, book in library["books"].items():
            if choice1.lower() == book["genre"].lower():
-               print(f"ID: {book_id} - Название: {book['title']}, Автор: {book['author']}, ��анр: {book['genre']}, ��од издания: {book['year']}, Рейтинг: {book['rating']}, Списки: {', '.join(book['lists'])}")
-               print("----------------------------------------")
+              print(f"\nID: {book_id}")
+              print(f"\nНазвание: {book['title']}")
+              print(f"\nАвтор: {book['author']}")
+              print(f"\nЖанр: {book['genre']}")
+              print(f"\nГод издания: {book['year']}")
+              print(f"\nРейтинг: {book['rating']}")
+              print(f"\nСписки: {', '.join(book['lists'])}")
+              print("\n----------------------------------------")
     if choice == "4":
        choice1 = input("Введите год издания: ")
        for book_id, book in library["books"].items():
            if int(choice1) == book["year"]:
-               print(f"ID: {book_id} - Название: {book['title']}, Автор: {book['author']}, ��анр: {book['genre']}, ��од издания: {book['year']}, Рейтинг: {book['rating']}, Списки: {', '.join(book['lists'])}")
-               print("----------------------------------------")
+              print(f"\nID: {book_id}")
+              print(f"\nНазвание: {book['title']}")
+              print(f"\nАвтор: {book['author']}")
+              print(f"\nЖанр: {book['genre']}")
+              print(f"\nГод издания: {book['year']}")
+              print(f"\nРейтинг: {book['rating']}")
+              print(f"\nСписки: {', '.join(book['lists'])}")
+              print("\n----------------------------------------")
     if choice == "5":
        choice1 = input("Введите рейтинг: ")
        for book_id, book in library["books"].items():
            if int(choice1) == book["rating"]:
-               print(f"ID: {book_id} - Название: {book['title']}, Автор: {book['author']}, ��анр: {book['genre']}, ��од издания: {book['year']}, Рейтинг: {book['rating']}, Списки: {', '.join(book['lists'])}")
-               print("----------------------------------------")
+              print(f"\nID: {book_id}")
+              print(f"\nНазвание: {book['title']}")
+              print(f"\nАвтор: {book['author']}")
+              print(f"\nЖанр: {book['genre']}")
+              print(f"\nГод издания: {book['year']}")
+              print(f"\nРейтинг: {book['rating']}")
+              print(f"\nСписки: {', '.join(book['lists'])}")
+              print("\n----------------------------------------")
     if choice == "6":
        choice1 = input("Введите списк: ")     
        for book_id, book in library["books"].items():
            if int(choice1) == book["lists"]:
-               print(f"ID: {book_id} - Название: {book['title']}, Автор: {book['author']}, ��анр: {book['genre']}, ��од издания: {book['year']}, Рейтинг: {book['rating']}, Списки: {', '.join(book['lists'])}")
-               print("----------------------------------------")  
+              print(f"\nID: {book_id}")
+              print(f"\nНазвание: {book['title']}")
+              print(f"\nАвтор: {book['author']}")
+              print(f"\nЖанр: {book['genre']}")
+              print(f"\nГод издания: {book['year']}")
+              print(f"\nРейтинг: {book['rating']}")
+              print(f"\nСписки: {', '.join(book['lists'])}")
+              print("\n----------------------------------------")
     if choice == "0":
      
      print("----------------------------------------")
-     print("Вы вышли из меню поиска книг")
+     print("\nВы вышли из меню поиска книг")
      main_menu()
                                             
                     
