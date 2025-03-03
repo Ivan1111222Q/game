@@ -64,27 +64,27 @@ def add_book():
  """Добавление новой книги"""
  print("\n===== ДОБАВЛЕНИЕ НОВОЙ КНИГИ =====")
  while True:
-      book_name = input("Введите название: ")
+      book_name = input("\nВведите название: ")
       if len(book_name) < 1:
        print("Название книги не может быть пустым.")
        continue
-      author = input("Введите автора: ")
+      author = input("\nВведите автора: ")
       if len(author) < 1:
           print("Автор не может быть пустым.")
           continue
-      janr = input("Введите жанр: " )
+      janr = input("\nВведите жанр: " )
       if len(janr) < 1:
          print("Жанр не может быть пустым.")
          continue
-      year = input("Введите год издания: ")
+      year = input("\nВведите год издания: ")
       if len(year) < 1:
          print("Год издания не может быть пустым.")
          continue
-      reiting = input("Введите рейтинг (1-5): ")
+      reiting = input("\nВведите рейтинг (1-5): ")
       if len(reiting) < 1:
          print("Рейтинг должен быть числом от 1 до 5.")
          continue
-      zapytay = input("Добавить в списки (через запятую): ").split(",")
+      zapytay = input("\nДобавить в списки (через запятую): ").split(",")
       for book_id, book in library["books"].items():
          if any(zapytay_item.lower() == book["title"].lower() for zapytay_item in zapytay):
             print(f"Книга '{book_name}' уже есть в списках: {', '.join(zapytay)}")
@@ -104,7 +104,7 @@ def add_book():
               "lists": zapytay
           }
          
-         print(f"Книга успешно добавлена с ID: {new_id}")
+         print(f"\nКнига успешно добавлена с ID: {new_id}")
          break 
  
       
@@ -124,6 +124,7 @@ def show_books():
          print(f"\nРейтинг: {book['rating']}")
          print(f"\nСписки: {', '.join(book['lists'])}")
          print("\n----------------------------------------")
+         print(f"Всего книг в библиотеке {book_id} ")
      break        
     
     
@@ -220,6 +221,8 @@ def search_books():
               print(f"\nРейтинг: {book['rating']}")
               print(f"\nСписки: {', '.join(book['lists'])}")
               print("\n----------------------------------------")
+    else:
+       print("Таких критериев поиска нету")
     if choice == "1":
        choice1 = input("Введите название: ")
        for book_id, book in library["books"].items():
@@ -232,6 +235,8 @@ def search_books():
               print(f"\nРейтинг: {book['rating']}")
               print(f"\nСписки: {', '.join(book['lists'])}")
               print("\n----------------------------------------")
+    else:
+       print("Таких критериев поиска нету")          
     if choice == "3":
        choice1 = input("Введите жанр: ")
        for book_id, book in library["books"].items():
@@ -244,6 +249,8 @@ def search_books():
               print(f"\nРейтинг: {book['rating']}")
               print(f"\nСписки: {', '.join(book['lists'])}")
               print("\n----------------------------------------")
+    else:
+       print("Таких критериев поиска нету")          
     if choice == "4":
        choice1 = input("Введите год издания: ")
        for book_id, book in library["books"].items():
@@ -256,6 +263,8 @@ def search_books():
               print(f"\nРейтинг: {book['rating']}")
               print(f"\nСписки: {', '.join(book['lists'])}")
               print("\n----------------------------------------")
+    else:
+       print("Таких критериев поиска нету")
     if choice == "5":
        choice1 = input("Введите рейтинг: ")
        for book_id, book in library["books"].items():
@@ -268,10 +277,12 @@ def search_books():
               print(f"\nРейтинг: {book['rating']}")
               print(f"\nСписки: {', '.join(book['lists'])}")
               print("\n----------------------------------------")
+    else:
+       print("Таких критериев поиска нету")
     if choice == "6":
        choice1 = input("Введите списк: ")     
        for book_id, book in library["books"].items():
-           if int(choice1) == book["lists"]:
+           if choice1.lower() == book["lists"]:
               print(f"\nID: {book_id}")
               print(f"\nНазвание: {book['title']}")
               print(f"\nАвтор: {book['author']}")
@@ -280,11 +291,17 @@ def search_books():
               print(f"\nРейтинг: {book['rating']}")
               print(f"\nСписки: {', '.join(book['lists'])}")
               print("\n----------------------------------------")
+              print(f"\nНайдено книг: {book_id}")
+    else:
+       print("Таких критериев поиска нету")
     if choice == "0":
-     
-     print("----------------------------------------")
-     print("\nВы вышли из меню поиска книг")
-     main_menu()
+       print("----------------------------------------")
+       print("\nВы вышли из меню поиска книг")
+       main_menu()
+       
+
+         
+              
                                             
                     
 
@@ -292,22 +309,33 @@ def search_books():
 
 def show_statistics():
  """Вывод статистики по библиотеке"""
- pass
+ while True:
+    print(f"\n===== СТАТИСТИКА БИБЛИОТЕКИ =====")
+    print(f"\nОбщее количество книг: {len(library['books'])}")
+    
+
+           
+
+          
+
+    
+
+
 
 
 def main_menu():
  """Основное меню программы"""
 
  while True:
-     print("\nМеню библиотеки:")
-     print("1. Добавить новую книгу")
+     print("\n===== МЕНЕДЖЕР ЛИЧНОЙ БИБЛИОТЕКИ =====")
+     print("\n1. Добавить новую книгу")
      print("2. Удалить книгу")
      print("3. Редактировать книгу")
      print("4. Поиск книг")
      print("5. Показать статистику")
      print("6. Показать все книги")
      print("0. Выход")
-     choice = input("Введите номер опции: ")
+     choice = input("\nВведите номер опции: ")
 
      if choice == "1":
          add_book()
