@@ -93,8 +93,9 @@ def add_book():
       
          
       if book_name  not in library["books"]:
-         max_id = max(int(book_id) for book_id in library["books"].keys())
-         new_id = str(max_id + 1) 
+        #  max_id = max(int(book_id) for book_id in library["books"].keys())
+        #  new_id = str(max_id + 1) 
+         new_id = str(max([int(id) for id in library["books"].keys()] + [0]) + 1)
          library["books"][new_id] = {
               "title": book_name,
               "author": author,
@@ -124,7 +125,7 @@ def show_books():
          print(f"\nРейтинг: {book['rating']}")
          print(f"\nСписки: {', '.join(book['lists'])}")
          print("\n----------------------------------------")
-         print(f"Всего книг в библиотеке {book_id} ")
+         print(f"Всего книг в библиотеке: {len(library['books'])}")
      break        
     
     
