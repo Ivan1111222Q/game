@@ -2,9 +2,14 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 import json
 import os
+from pydantic import BaseModel, validator
+from typing import Optional, List
 
 
 app = FastAPI()
+
+
+
 
 
 @app.on_event("startup")
@@ -102,7 +107,7 @@ async def add_book(book_id: str, book_data: dict):
 
 
 
-@app.put("/edit_book/{book_id}")
+@app.patch("/edit_book/{book_id}")
 async def edit_book(book_id: str, book_data: dict):
     """Редактирование книги"""
     if book_id not in library["books"]:
@@ -110,6 +115,9 @@ async def edit_book(book_id: str, book_data: dict):
     library["books"][book_id].update(book_data)
     save_library(library)
     return {"message": "Книга успешно изменена", "success": True}
+
+
+
 
 
 
