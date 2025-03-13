@@ -46,6 +46,8 @@ def load_library(filename="library.json"):
     except Exception as e:
         print(f"Произошла ошибка при загрузке библиотеки: {e}")
         return empty_library
+    
+
 
 def save_library(library, filename="library.json"):
     """
@@ -74,11 +76,13 @@ def save_library(library, filename="library.json"):
 
 @app.get("/show_books")
 async def show_books():
+    """Вывод списка книг"""
     return library
    
 
 @app.delete("/remove_book/{book_id}")
 async def remove_book(book_id: str):
+    """Удаление книги"""
     if book_id in library["books"]:
         del library["books"][book_id]
         save_library(library)    
@@ -89,11 +93,26 @@ async def remove_book(book_id: str):
 
 @app.post("/add_book/{book_id}")
 async def add_book(book_id: str, book_data: dict):
+    """Добавление книги"""
     if book_id in library["books"]:
         raise HTTPException(status_code=409, detail="Книга с таким ID уже существует")
     library["books"][book_id] = book_data
     save_library(library)
     return {"message": "Книга успешно добавлена", "success": True}
+
+
+
+@app.put("/edit_book/{book_id}")
+async def edit_book(book_id: str, book_data: dict):
+    """Редактирование книги"""
+    if book_id not in library["books"]:
+        raise HTTPException(status_code=404, detail="Книга не найдена")
+    library["books"][book_id].update(book_data)
+    save_library(library)
+    return {"message": "Книга успешно изменена", "success": True}
+
+
+
 
 
 
