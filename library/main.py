@@ -107,7 +107,7 @@ async def add_book(book_id: str, book_data: dict):
 
 
 
-@app.patch("/edit_book/{book_id}")
+@app.put("/edit_book/{book_id}")
 async def edit_book(book_id: str, book_data: dict):
     """Редактирование книги"""
     if book_id not in library["books"]:
