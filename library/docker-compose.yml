@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment: # Исправлены отступы
+      PORT: 8004

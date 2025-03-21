@@ -9,25 +9,12 @@ from pydantic import BaseModel, validator
 from typing import Optional, List
 
 
+
 app = FastAPI()
-
-
-
-@app.get("/show_books")
-async def show_books():
-    """Вывод списка книг"""
-    all_books = session.query(Book).all()
-    for book in all_books:
-     return book   
-
-
-
 
 # Создание подключения к базе данных
 engine = create_engine('postgresql://admin:1234@localhost:5432/library')
 
-# # Создание базового класса для моделей
-# Base = declarative_base()
 
 # Создание базового класса для моделей (новый стиль SQLAlchemy 2.0)
 class Base(DeclarativeBase):
@@ -44,24 +31,68 @@ class Book(Base):
     year = Column(Integer)
     rating = Column(Integer)
 
-# Создание таблиц в базе данных
-Base.metadata.create_all(engine)
+
 
 # Создание сессии для работы с базой данных
 Session = sessionmaker(bind=engine)
 session = Session()
 
+
+@app.get("/show_books")
+async def show_books():
+    """Вывод списка книг"""
+    all_books = session.query(Book).all()
+    return all_books  
+    
+
+@app.post("/add_book/")
+async def add_book(book: Book):
+    """Добавление книги"""
+    existing_book = session.query(Book).filter(Book.title == book.title).first()
+    if existing_book:
+        raise HTTPException(status_code=409, detail="Книга с таким названием уже существует")
+    
+   
+
+    db_book = Book(
+        title=book.title,
+        author=book.author,
+        genre=book.genre,
+        year=book.year,
+        rating=book.rating
+      )
+
+    session.add(db_book)
+    session.commit()
+    return {"message": "Книга успешно добавлена", "success": True}
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+# # Создание базового класса для моделей
+# Base = declarative_base()
+
 # Добавление данных
-books = [
-    Book(title="Война и мир", author="Лев Толстой", genre="Роман", year=1869, rating=5),
-    Book(title="Гарри Поттер и философский камень", author="Дж. К. Роулинг", genre="Фэнтези", year=1997, rating=4)
-]
+# books = [
+#     Book(title="Война и мир", author="Лев Толстой", genre="Роман", year=1869, rating=5),
+#     Book(title="Гарри Поттер и философский камень", author="Дж. К. Роулинг", genre="Фэнтези", year=1997, rating=4)
+# ]
 
 # Добавление книг в сессию
-session.add_all(books)
+# session.add_all(books)
 
-# Сохранение изменений
-session.commit()
+# # Сохранение изменений
+# session.commit()
 
 
 
@@ -104,8 +135,6 @@ session.commit()
 #     print(len(modern_books))
 #     for book in modern_books:
 #         print(f"{book.title} - {book.author} ({book.year})")
-
-
 
 
 if __name__ == "__main__":

@@ -6,9 +6,14 @@ from pydantic import BaseModel, validator
 from typing import Optional, List
 
 
+
 app = FastAPI()
 
 
+
+@app.get("/")  
+async def hello_world():
+    return {"message": "Привет от бэкенда!"}  #
 
 
 
