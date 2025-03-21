@@ -90,6 +90,19 @@ async def remove_book(book_id: int):
 
 
 
+@app.get("/show_book")
+async def show_book(title: str, author: str,):
+    """Поиск одной книги"""
+    book = session.query(Book).filter(Book.title == title, Book.author == author).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Книга не найдена")
+    
+    return book
+    
+
+
+
+
  
 
 
