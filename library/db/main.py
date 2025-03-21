@@ -98,6 +98,50 @@ async def show_book(title: str, author: str,):
         raise HTTPException(status_code=404, detail="Книга не найдена")
     
     return book
+
+@app.get("/multiple_books")
+async def multiple_books( title: str = None, author: str = None, genre: str = None, year: int = None, rating: int = None):
+    """Поиск книги"""
+    
+    if title:
+        book = session.query(Book).filter(Book.title == title).first()
+        if not book:
+            raise HTTPException(status_code=404, detail="Книга не найдена")
+        return book
+        
+    
+    
+    if author:
+        book = session.query(Book).filter(Book.author == author).first()
+        if not book:
+            raise HTTPException(status_code=404, detail="Автор не найден")
+        return book
+    
+    if genre:
+        book = session.query(Book).filter(Book.genre == genre).all()
+        if not book:
+            raise HTTPException(status_code=404, detail="Жанр не найдены")
+        return book
+    
+    if year:
+        book = session.query(Book).filter(Book.year == year).all()
+        if not book:
+            raise HTTPException(status_code=404, detail="Книги с таким годом не найдены")
+        return book
+    
+    if rating:
+        book = session.query(Book).filter(Book.rating == rating).all()
+        if not book:
+            raise HTTPException(status_code=404, detail="Книги с таким рейтингом не найдены")
+        return book
+        
+
+        
+    if title is None:
+     raise HTTPException(status_code=404, detail="Заполните поля")   
+
+    return book    
+
     
 
 
