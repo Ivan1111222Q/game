@@ -74,7 +74,19 @@ async def add_book(
 
 
 
+@app.delete("/remove_book/")
+async def remove_book(book_id: int):
+    """Удаление книги"""
+    book = session.query(Book).filter(Book.id == book_id).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Книга не найдена")
+    
 
+
+    
+    session.delete(book)
+    session.commit()
+    return {"message": "Все книги успешно удалены", "success": True}
 
 
 
