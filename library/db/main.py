@@ -46,20 +46,26 @@ async def show_books():
     
 
 @app.post("/add_book/")
-async def add_book(book: Book):
+async def add_book(
+    title: str,
+    author: str,
+    genre: str,
+    year: int,
+    rating: int
+):
     """Добавление книги"""
-    existing_book = session.query(Book).filter(Book.title == book.title).first()
+    existing_book = session.query(Book).filter(Book.title == title).first()
     if existing_book:
         raise HTTPException(status_code=409, detail="Книга с таким названием уже существует")
     
    
 
     db_book = Book(
-        title=book.title,
-        author=book.author,
-        genre=book.genre,
-        year=book.year,
-        rating=book.rating
+        title= title,
+        author= author,
+        genre= genre,
+        year= year,
+        rating= rating
       )
 
     session.add(db_book)
