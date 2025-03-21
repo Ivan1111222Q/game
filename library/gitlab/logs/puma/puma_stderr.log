@@ -7,3 +7,28 @@ DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLo
 /opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
 DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.
 DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.
+DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.
+DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.
+DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.
+DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.
+DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+/opt/gitlab/embedded/lib/ruby/3.2.0/delegate.rb:104: warning: delegator does not forward private method #to_ary
+DEPRECATION WARNING: using BatchLoader.for in GraphQL is deprecated. Use BatchLoader::GraphQL.for instead or return BatchLoader::GraphQL.wrap from your resolver.

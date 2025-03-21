@@ -868,3 +868,537 @@
 2025-03-21_09:01:14.99642 	  FROM pg_class
 2025-03-21_09:01:14.99649 	 WHERE relkind = 'r';
 2025-03-21_09:01:14.99661 	
+2025-03-21_09:01:30.24683 LOG:  duration: 2311.412 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:01:30.24702 	       relname as relname,
+2025-03-21_09:01:30.24711 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:01:30.24718 	  FROM pg_class
+2025-03-21_09:01:30.24726 	 WHERE relkind = 'r';
+2025-03-21_09:01:30.24733 	
+2025-03-21_09:01:45.14191 LOG:  duration: 2217.308 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:01:45.14560 	       relname as relname,
+2025-03-21_09:01:45.14569 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:01:45.14575 	  FROM pg_class
+2025-03-21_09:01:45.14584 	 WHERE relkind = 'r';
+2025-03-21_09:01:45.14596 	
+2025-03-21_09:02:00.14179 LOG:  duration: 2232.253 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:02:00.14301 	       relname as relname,
+2025-03-21_09:02:00.14310 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:02:00.14315 	  FROM pg_class
+2025-03-21_09:02:00.14322 	 WHERE relkind = 'r';
+2025-03-21_09:02:00.14328 	
+2025-03-21_09:02:15.53235 LOG:  duration: 2598.706 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:02:15.53278 	       relname as relname,
+2025-03-21_09:02:15.53286 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:02:15.53293 	  FROM pg_class
+2025-03-21_09:02:15.53302 	 WHERE relkind = 'r';
+2025-03-21_09:02:15.53308 	
+2025-03-21_09:02:30.13312 LOG:  duration: 2222.810 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:02:30.13324 	       relname as relname,
+2025-03-21_09:02:30.13332 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:02:30.13339 	  FROM pg_class
+2025-03-21_09:02:30.13345 	 WHERE relkind = 'r';
+2025-03-21_09:02:30.13351 	
+2025-03-21_09:02:45.12396 LOG:  duration: 2217.647 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:02:45.12517 	       relname as relname,
+2025-03-21_09:02:45.12526 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:02:45.12534 	  FROM pg_class
+2025-03-21_09:02:45.12541 	 WHERE relkind = 'r';
+2025-03-21_09:02:45.12548 	
+2025-03-21_09:03:00.36695 LOG:  duration: 2454.078 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:03:00.36798 	       relname as relname,
+2025-03-21_09:03:00.36807 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:03:00.36814 	  FROM pg_class
+2025-03-21_09:03:00.36821 	 WHERE relkind = 'r';
+2025-03-21_09:03:00.36828 	
+2025-03-21_09:03:15.24884 LOG:  duration: 2323.606 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:03:15.25042 	       relname as relname,
+2025-03-21_09:03:15.25052 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:03:15.25061 	  FROM pg_class
+2025-03-21_09:03:15.25071 	 WHERE relkind = 'r';
+2025-03-21_09:03:15.25080 	
+2025-03-21_09:03:30.95106 LOG:  duration: 3022.426 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:03:30.95234 	       relname as relname,
+2025-03-21_09:03:30.95241 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:03:30.95247 	  FROM pg_class
+2025-03-21_09:03:30.95254 	 WHERE relkind = 'r';
+2025-03-21_09:03:30.95261 	
+2025-03-21_09:03:45.28609 LOG:  duration: 2353.186 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:03:45.28640 	       relname as relname,
+2025-03-21_09:03:45.28649 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:03:45.28662 	  FROM pg_class
+2025-03-21_09:03:45.28676 	 WHERE relkind = 'r';
+2025-03-21_09:03:45.28684 	
+2025-03-21_09:04:00.27326 LOG:  duration: 2369.301 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:04:00.27429 	       relname as relname,
+2025-03-21_09:04:00.27438 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:04:00.27445 	  FROM pg_class
+2025-03-21_09:04:00.27452 	 WHERE relkind = 'r';
+2025-03-21_09:04:00.27458 	
+2025-03-21_09:04:15.23370 LOG:  duration: 2304.267 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:04:15.23404 	       relname as relname,
+2025-03-21_09:04:15.23420 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:04:15.23429 	  FROM pg_class
+2025-03-21_09:04:15.23435 	 WHERE relkind = 'r';
+2025-03-21_09:04:15.23441 	
+2025-03-21_09:04:30.14288 LOG:  duration: 2219.013 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:04:30.14400 	       relname as relname,
+2025-03-21_09:04:30.14408 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:04:30.14414 	  FROM pg_class
+2025-03-21_09:04:30.14420 	 WHERE relkind = 'r';
+2025-03-21_09:04:30.14426 	
+2025-03-21_09:04:45.33812 LOG:  duration: 2401.275 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:04:45.33924 	       relname as relname,
+2025-03-21_09:04:45.33932 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:04:45.33939 	  FROM pg_class
+2025-03-21_09:04:45.33946 	 WHERE relkind = 'r';
+2025-03-21_09:04:45.33953 	
+2025-03-21_09:05:00.05922 LOG:  duration: 2138.257 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:05:00.06031 	       relname as relname,
+2025-03-21_09:05:00.06045 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:05:00.06052 	  FROM pg_class
+2025-03-21_09:05:00.06058 	 WHERE relkind = 'r';
+2025-03-21_09:05:00.06064 	
+2025-03-21_09:05:15.13918 LOG:  duration: 2210.980 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:05:15.14030 	       relname as relname,
+2025-03-21_09:05:15.14037 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:05:15.14044 	  FROM pg_class
+2025-03-21_09:05:15.14052 	 WHERE relkind = 'r';
+2025-03-21_09:05:15.14061 	
+2025-03-21_09:05:30.32406 LOG:  duration: 2399.127 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:05:30.32533 	       relname as relname,
+2025-03-21_09:05:30.32543 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:05:30.32552 	  FROM pg_class
+2025-03-21_09:05:30.32560 	 WHERE relkind = 'r';
+2025-03-21_09:05:30.32568 	
+2025-03-21_09:05:45.17624 LOG:  duration: 2244.249 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:05:45.17742 	       relname as relname,
+2025-03-21_09:05:45.17753 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:05:45.17760 	  FROM pg_class
+2025-03-21_09:05:45.17766 	 WHERE relkind = 'r';
+2025-03-21_09:05:45.17775 	
+2025-03-21_09:06:00.25231 LOG:  duration: 2326.754 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:06:00.25336 	       relname as relname,
+2025-03-21_09:06:00.25345 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:06:00.25355 	  FROM pg_class
+2025-03-21_09:06:00.25364 	 WHERE relkind = 'r';
+2025-03-21_09:06:00.25371 	
+2025-03-21_09:06:15.18328 LOG:  duration: 2256.834 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:06:15.18430 	       relname as relname,
+2025-03-21_09:06:15.18438 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:06:15.18447 	  FROM pg_class
+2025-03-21_09:06:15.18455 	 WHERE relkind = 'r';
+2025-03-21_09:06:15.18463 	
+2025-03-21_09:06:30.36426 LOG:  duration: 2419.393 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:06:30.36541 	       relname as relname,
+2025-03-21_09:06:30.36550 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:06:30.36559 	  FROM pg_class
+2025-03-21_09:06:30.36568 	 WHERE relkind = 'r';
+2025-03-21_09:06:30.36577 	
+2025-03-21_09:06:45.13856 LOG:  duration: 2233.433 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:06:45.13961 	       relname as relname,
+2025-03-21_09:06:45.13969 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:06:45.13979 	  FROM pg_class
+2025-03-21_09:06:45.13990 	 WHERE relkind = 'r';
+2025-03-21_09:06:45.14003 	
+2025-03-21_09:07:00.09300 LOG:  duration: 2186.927 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:07:00.09333 	       relname as relname,
+2025-03-21_09:07:00.09341 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:07:00.09353 	  FROM pg_class
+2025-03-21_09:07:00.09363 	 WHERE relkind = 'r';
+2025-03-21_09:07:00.09379 	
+2025-03-21_09:07:15.55666 LOG:  duration: 2647.785 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:07:15.55766 	       relname as relname,
+2025-03-21_09:07:15.55774 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:07:15.55780 	  FROM pg_class
+2025-03-21_09:07:15.55786 	 WHERE relkind = 'r';
+2025-03-21_09:07:15.55792 	
+2025-03-21_09:07:30.10005 LOG:  duration: 2186.071 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:07:30.10105 	       relname as relname,
+2025-03-21_09:07:30.10111 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:07:30.10117 	  FROM pg_class
+2025-03-21_09:07:30.10124 	 WHERE relkind = 'r';
+2025-03-21_09:07:30.10130 	
+2025-03-21_09:07:45.13612 LOG:  duration: 2218.547 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:07:45.13713 	       relname as relname,
+2025-03-21_09:07:45.13719 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:07:45.13726 	  FROM pg_class
+2025-03-21_09:07:45.13732 	 WHERE relkind = 'r';
+2025-03-21_09:07:45.13738 	
+2025-03-21_09:08:00.14396 LOG:  duration: 2236.028 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:08:00.14430 	       relname as relname,
+2025-03-21_09:08:00.14437 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:08:00.14443 	  FROM pg_class
+2025-03-21_09:08:00.14450 	 WHERE relkind = 'r';
+2025-03-21_09:08:00.14459 	
+2025-03-21_09:08:15.05473 LOG:  duration: 2134.293 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:08:15.05572 	       relname as relname,
+2025-03-21_09:08:15.05580 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:08:15.05589 	  FROM pg_class
+2025-03-21_09:08:15.05596 	 WHERE relkind = 'r';
+2025-03-21_09:08:15.05603 	
+2025-03-21_09:08:30.06331 LOG:  duration: 2146.111 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:08:30.06385 	       relname as relname,
+2025-03-21_09:08:30.06392 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:08:30.06398 	  FROM pg_class
+2025-03-21_09:08:30.06404 	 WHERE relkind = 'r';
+2025-03-21_09:08:30.06410 	
+2025-03-21_09:08:45.10742 LOG:  duration: 2189.750 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:08:45.10838 	       relname as relname,
+2025-03-21_09:08:45.10846 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:08:45.10853 	  FROM pg_class
+2025-03-21_09:08:45.10861 	 WHERE relkind = 'r';
+2025-03-21_09:08:45.10869 	
+2025-03-21_09:09:00.15286 LOG:  duration: 2245.676 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:09:00.15341 	       relname as relname,
+2025-03-21_09:09:00.15349 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:09:00.15357 	  FROM pg_class
+2025-03-21_09:09:00.15364 	 WHERE relkind = 'r';
+2025-03-21_09:09:00.15371 	
+2025-03-21_09:09:15.24422 LOG:  duration: 2295.335 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:09:15.24535 	       relname as relname,
+2025-03-21_09:09:15.24547 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:09:15.24556 	  FROM pg_class
+2025-03-21_09:09:15.24564 	 WHERE relkind = 'r';
+2025-03-21_09:09:15.24572 	
+2025-03-21_09:09:30.21194 LOG:  duration: 2283.649 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:09:30.21286 	       relname as relname,
+2025-03-21_09:09:30.21295 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:09:30.21305 	  FROM pg_class
+2025-03-21_09:09:30.21313 	 WHERE relkind = 'r';
+2025-03-21_09:09:30.21321 	
+2025-03-21_09:09:45.44494 LOG:  duration: 2505.534 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:09:45.44528 	       relname as relname,
+2025-03-21_09:09:45.44533 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:09:45.44538 	  FROM pg_class
+2025-03-21_09:09:45.44543 	 WHERE relkind = 'r';
+2025-03-21_09:09:45.44548 	
+2025-03-21_09:10:00.05993 LOG:  duration: 2142.023 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:10:00.06113 	       relname as relname,
+2025-03-21_09:10:00.06122 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:10:00.06130 	  FROM pg_class
+2025-03-21_09:10:00.06137 	 WHERE relkind = 'r';
+2025-03-21_09:10:00.06146 	
+2025-03-21_09:10:15.44175 LOG:  duration: 2497.784 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:10:15.44196 	       relname as relname,
+2025-03-21_09:10:15.44205 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:10:15.44217 	  FROM pg_class
+2025-03-21_09:10:15.44224 	 WHERE relkind = 'r';
+2025-03-21_09:10:15.44230 	
+2025-03-21_09:10:30.64132 LOG:  duration: 2692.873 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:10:30.64146 	       relname as relname,
+2025-03-21_09:10:30.64153 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:10:30.64160 	  FROM pg_class
+2025-03-21_09:10:30.64166 	 WHERE relkind = 'r';
+2025-03-21_09:10:30.64172 	
+2025-03-21_09:10:45.48936 LOG:  duration: 2558.055 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:10:45.48988 	       relname as relname,
+2025-03-21_09:10:45.49002 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:10:45.49012 	  FROM pg_class
+2025-03-21_09:10:45.49026 	 WHERE relkind = 'r';
+2025-03-21_09:10:45.49037 	
+2025-03-21_09:11:00.14068 LOG:  duration: 2224.053 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:11:00.14082 	       relname as relname,
+2025-03-21_09:11:00.14094 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:11:00.14105 	  FROM pg_class
+2025-03-21_09:11:00.14115 	 WHERE relkind = 'r';
+2025-03-21_09:11:00.14122 	
+2025-03-21_09:11:15.21393 LOG:  duration: 2288.982 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:11:15.21405 	       relname as relname,
+2025-03-21_09:11:15.21412 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:11:15.21419 	  FROM pg_class
+2025-03-21_09:11:15.21426 	 WHERE relkind = 'r';
+2025-03-21_09:11:15.21432 	
+2025-03-21_09:11:30.16204 LOG:  duration: 2259.698 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:11:30.16350 	       relname as relname,
+2025-03-21_09:11:30.16361 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:11:30.16370 	  FROM pg_class
+2025-03-21_09:11:30.16379 	 WHERE relkind = 'r';
+2025-03-21_09:11:30.16387 	
+2025-03-21_09:11:45.36866 LOG:  duration: 2431.890 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:11:45.36878 	       relname as relname,
+2025-03-21_09:11:45.36894 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:11:45.36902 	  FROM pg_class
+2025-03-21_09:11:45.36909 	 WHERE relkind = 'r';
+2025-03-21_09:11:45.36915 	
+2025-03-21_09:12:00.22609 LOG:  duration: 2286.759 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:12:00.22633 	       relname as relname,
+2025-03-21_09:12:00.22642 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:12:00.22648 	  FROM pg_class
+2025-03-21_09:12:00.22654 	 WHERE relkind = 'r';
+2025-03-21_09:12:00.22660 	
+2025-03-21_09:12:15.65342 LOG:  duration: 2730.464 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:12:15.65355 	       relname as relname,
+2025-03-21_09:12:15.65363 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:12:15.65370 	  FROM pg_class
+2025-03-21_09:12:15.65377 	 WHERE relkind = 'r';
+2025-03-21_09:12:15.65384 	
+2025-03-21_09:12:30.31025 LOG:  duration: 2396.309 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:12:30.31186 	       relname as relname,
+2025-03-21_09:12:30.31193 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:12:30.31200 	  FROM pg_class
+2025-03-21_09:12:30.31206 	 WHERE relkind = 'r';
+2025-03-21_09:12:30.31212 	
+2025-03-21_09:12:45.38587 LOG:  duration: 2460.567 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:12:45.38606 	       relname as relname,
+2025-03-21_09:12:45.38613 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:12:45.38621 	  FROM pg_class
+2025-03-21_09:12:45.38637 	 WHERE relkind = 'r';
+2025-03-21_09:12:45.38901 	
+2025-03-21_09:13:00.15044 LOG:  duration: 2244.261 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:13:00.15055 	       relname as relname,
+2025-03-21_09:13:00.15066 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:13:00.15074 	  FROM pg_class
+2025-03-21_09:13:00.15080 	 WHERE relkind = 'r';
+2025-03-21_09:13:00.15086 	
+2025-03-21_09:13:15.33291 LOG:  duration: 2403.365 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:13:15.33320 	       relname as relname,
+2025-03-21_09:13:15.33329 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:13:15.33343 	  FROM pg_class
+2025-03-21_09:13:15.33381 	 WHERE relkind = 'r';
+2025-03-21_09:13:15.33416 	
+2025-03-21_09:13:30.13663 LOG:  duration: 2229.732 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:13:30.13677 	       relname as relname,
+2025-03-21_09:13:30.13687 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:13:30.13695 	  FROM pg_class
+2025-03-21_09:13:30.13701 	 WHERE relkind = 'r';
+2025-03-21_09:13:30.13708 	
+2025-03-21_09:13:45.25652 LOG:  duration: 2334.162 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:13:45.25944 	       relname as relname,
+2025-03-21_09:13:45.25956 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:13:45.25964 	  FROM pg_class
+2025-03-21_09:13:45.25976 	 WHERE relkind = 'r';
+2025-03-21_09:13:45.25994 	
+2025-03-21_09:14:00.16768 LOG:  duration: 2245.520 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:14:00.16781 	       relname as relname,
+2025-03-21_09:14:00.16789 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:14:00.16798 	  FROM pg_class
+2025-03-21_09:14:00.16806 	 WHERE relkind = 'r';
+2025-03-21_09:14:00.16813 	
+2025-03-21_09:14:15.33436 LOG:  duration: 2392.142 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:14:15.33451 	       relname as relname,
+2025-03-21_09:14:15.33461 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:14:15.33467 	  FROM pg_class
+2025-03-21_09:14:15.33473 	 WHERE relkind = 'r';
+2025-03-21_09:14:15.33479 	
+2025-03-21_09:14:30.06580 LOG:  duration: 2159.238 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:14:30.06593 	       relname as relname,
+2025-03-21_09:14:30.06599 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:14:30.06606 	  FROM pg_class
+2025-03-21_09:14:30.06612 	 WHERE relkind = 'r';
+2025-03-21_09:14:30.06620 	
+2025-03-21_09:14:45.28186 LOG:  duration: 2347.334 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:14:45.28204 	       relname as relname,
+2025-03-21_09:14:45.28212 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:14:45.28218 	  FROM pg_class
+2025-03-21_09:14:45.28227 	 WHERE relkind = 'r';
+2025-03-21_09:14:45.28233 	
+2025-03-21_09:15:00.13448 LOG:  duration: 2205.787 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:15:00.13550 	       relname as relname,
+2025-03-21_09:15:00.13566 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:15:00.13578 	  FROM pg_class
+2025-03-21_09:15:00.13586 	 WHERE relkind = 'r';
+2025-03-21_09:15:00.13594 	
+2025-03-21_09:15:15.41345 LOG:  duration: 2464.621 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:15:15.41402 	       relname as relname,
+2025-03-21_09:15:15.41409 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:15:15.41415 	  FROM pg_class
+2025-03-21_09:15:15.41422 	 WHERE relkind = 'r';
+2025-03-21_09:15:15.41430 	
+2025-03-21_09:15:30.12811 LOG:  duration: 2200.657 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:15:30.12827 	       relname as relname,
+2025-03-21_09:15:30.12835 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:15:30.12844 	  FROM pg_class
+2025-03-21_09:15:30.12851 	 WHERE relkind = 'r';
+2025-03-21_09:15:30.12857 	
+2025-03-21_09:15:45.43227 LOG:  duration: 2491.839 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:15:45.43273 	       relname as relname,
+2025-03-21_09:15:45.43281 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:15:45.43287 	  FROM pg_class
+2025-03-21_09:15:45.43293 	 WHERE relkind = 'r';
+2025-03-21_09:15:45.43299 	
+2025-03-21_09:16:00.13413 LOG:  duration: 2192.116 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:16:00.13425 	       relname as relname,
+2025-03-21_09:16:00.13433 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:16:00.13442 	  FROM pg_class
+2025-03-21_09:16:00.13452 	 WHERE relkind = 'r';
+2025-03-21_09:16:00.13461 	
+2025-03-21_09:16:15.27257 LOG:  duration: 2345.124 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:16:15.27305 	       relname as relname,
+2025-03-21_09:16:15.27321 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:16:15.27331 	  FROM pg_class
+2025-03-21_09:16:15.27358 	 WHERE relkind = 'r';
+2025-03-21_09:16:15.27373 	
+2025-03-21_09:16:30.09685 LOG:  duration: 2172.317 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:16:30.09697 	       relname as relname,
+2025-03-21_09:16:30.09705 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:16:30.09713 	  FROM pg_class
+2025-03-21_09:16:30.09720 	 WHERE relkind = 'r';
+2025-03-21_09:16:30.09725 	
+2025-03-21_09:16:45.11520 LOG:  duration: 2208.340 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:16:45.11533 	       relname as relname,
+2025-03-21_09:16:45.11542 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:16:45.11549 	  FROM pg_class
+2025-03-21_09:16:45.11555 	 WHERE relkind = 'r';
+2025-03-21_09:16:45.11562 	
+2025-03-21_09:17:00.11607 LOG:  duration: 2204.334 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:17:00.11621 	       relname as relname,
+2025-03-21_09:17:00.11632 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:17:00.11638 	  FROM pg_class
+2025-03-21_09:17:00.11644 	 WHERE relkind = 'r';
+2025-03-21_09:17:00.11651 	
+2025-03-21_09:17:15.17280 LOG:  duration: 2246.759 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:17:15.17298 	       relname as relname,
+2025-03-21_09:17:15.17304 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:17:15.17310 	  FROM pg_class
+2025-03-21_09:17:15.17316 	 WHERE relkind = 'r';
+2025-03-21_09:17:15.17323 	
+2025-03-21_09:17:30.31572 LOG:  duration: 2386.945 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:17:30.31586 	       relname as relname,
+2025-03-21_09:17:30.31593 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:17:30.31599 	  FROM pg_class
+2025-03-21_09:17:30.31605 	 WHERE relkind = 'r';
+2025-03-21_09:17:30.31611 	
+2025-03-21_09:17:45.37859 LOG:  duration: 2454.974 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:17:45.37880 	       relname as relname,
+2025-03-21_09:17:45.37890 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:17:45.37900 	  FROM pg_class
+2025-03-21_09:17:45.37911 	 WHERE relkind = 'r';
+2025-03-21_09:17:45.37918 	
+2025-03-21_09:18:00.17284 LOG:  duration: 2235.151 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:18:00.17297 	       relname as relname,
+2025-03-21_09:18:00.17304 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:18:00.17312 	  FROM pg_class
+2025-03-21_09:18:00.17318 	 WHERE relkind = 'r';
+2025-03-21_09:18:00.17330 	
+2025-03-21_09:18:15.32029 LOG:  duration: 2392.545 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:18:15.32047 	       relname as relname,
+2025-03-21_09:18:15.32054 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:18:15.32061 	  FROM pg_class
+2025-03-21_09:18:15.32068 	 WHERE relkind = 'r';
+2025-03-21_09:18:15.32074 	
+2025-03-21_09:18:30.20568 LOG:  duration: 2253.922 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:18:30.20583 	       relname as relname,
+2025-03-21_09:18:30.20590 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:18:30.20596 	  FROM pg_class
+2025-03-21_09:18:30.20617 	 WHERE relkind = 'r';
+2025-03-21_09:18:30.20624 	
+2025-03-21_09:18:46.36657 LOG:  duration: 3427.685 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:18:46.36677 	       relname as relname,
+2025-03-21_09:18:46.36685 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:18:46.36695 	  FROM pg_class
+2025-03-21_09:18:46.36704 	 WHERE relkind = 'r';
+2025-03-21_09:18:46.36715 	
+2025-03-21_09:19:00.32064 LOG:  duration: 2384.381 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:19:00.32076 	       relname as relname,
+2025-03-21_09:19:00.32082 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:19:00.32088 	  FROM pg_class
+2025-03-21_09:19:00.32097 	 WHERE relkind = 'r';
+2025-03-21_09:19:00.32103 	
+2025-03-21_09:19:15.19367 LOG:  duration: 2266.773 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:19:15.19385 	       relname as relname,
+2025-03-21_09:19:15.19392 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:19:15.19402 	  FROM pg_class
+2025-03-21_09:19:15.19409 	 WHERE relkind = 'r';
+2025-03-21_09:19:15.19415 	
+2025-03-21_09:19:30.12264 LOG:  duration: 2198.812 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:19:30.12321 	       relname as relname,
+2025-03-21_09:19:30.12329 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:19:30.12340 	  FROM pg_class
+2025-03-21_09:19:30.12347 	 WHERE relkind = 'r';
+2025-03-21_09:19:30.12353 	
+2025-03-21_09:19:45.08864 LOG:  duration: 2161.793 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:19:45.08879 	       relname as relname,
+2025-03-21_09:19:45.08889 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:19:45.08898 	  FROM pg_class
+2025-03-21_09:19:45.08921 	 WHERE relkind = 'r';
+2025-03-21_09:19:45.08950 	
+2025-03-21_09:20:00.23229 LOG:  duration: 2306.172 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:20:00.23247 	       relname as relname,
+2025-03-21_09:20:00.23258 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:20:00.23266 	  FROM pg_class
+2025-03-21_09:20:00.23272 	 WHERE relkind = 'r';
+2025-03-21_09:20:00.23282 	
+2025-03-21_09:20:15.25191 LOG:  duration: 2315.201 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:20:15.25203 	       relname as relname,
+2025-03-21_09:20:15.25213 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:20:15.25222 	  FROM pg_class
+2025-03-21_09:20:15.25230 	 WHERE relkind = 'r';
+2025-03-21_09:20:15.25238 	
+2025-03-21_09:20:30.10763 LOG:  duration: 2195.700 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:20:30.10781 	       relname as relname,
+2025-03-21_09:20:30.10791 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:20:30.10798 	  FROM pg_class
+2025-03-21_09:20:30.10806 	 WHERE relkind = 'r';
+2025-03-21_09:20:30.10813 	
+2025-03-21_09:20:45.13411 LOG:  duration: 2212.817 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:20:45.13424 	       relname as relname,
+2025-03-21_09:20:45.13437 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:20:45.13445 	  FROM pg_class
+2025-03-21_09:20:45.13451 	 WHERE relkind = 'r';
+2025-03-21_09:20:45.13460 	
+2025-03-21_09:21:00.25037 LOG:  duration: 2291.743 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:21:00.25051 	       relname as relname,
+2025-03-21_09:21:00.25058 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:21:00.25087 	  FROM pg_class
+2025-03-21_09:21:00.25114 	 WHERE relkind = 'r';
+2025-03-21_09:21:00.25121 	
+2025-03-21_09:21:15.09941 LOG:  duration: 2174.344 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:21:15.09954 	       relname as relname,
+2025-03-21_09:21:15.09960 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:21:15.09968 	  FROM pg_class
+2025-03-21_09:21:15.09974 	 WHERE relkind = 'r';
+2025-03-21_09:21:15.09980 	
+2025-03-21_09:21:30.10271 LOG:  duration: 2197.541 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:21:30.10298 	       relname as relname,
+2025-03-21_09:21:30.10304 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:21:30.10310 	  FROM pg_class
+2025-03-21_09:21:30.10316 	 WHERE relkind = 'r';
+2025-03-21_09:21:30.10322 	
+2025-03-21_09:21:45.52146 LOG:  duration: 2583.982 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:21:45.52159 	       relname as relname,
+2025-03-21_09:21:45.52169 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:21:45.52177 	  FROM pg_class
+2025-03-21_09:21:45.52183 	 WHERE relkind = 'r';
+2025-03-21_09:21:45.52189 	
+2025-03-21_09:22:00.39228 LOG:  duration: 2466.726 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:22:00.39246 	       relname as relname,
+2025-03-21_09:22:00.39253 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:22:00.39260 	  FROM pg_class
+2025-03-21_09:22:00.39266 	 WHERE relkind = 'r';
+2025-03-21_09:22:00.39272 	
+2025-03-21_09:22:15.36464 LOG:  duration: 2452.975 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:22:15.36479 	       relname as relname,
+2025-03-21_09:22:15.36486 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:22:15.36492 	  FROM pg_class
+2025-03-21_09:22:15.36498 	 WHERE relkind = 'r';
+2025-03-21_09:22:15.36508 	
+2025-03-21_09:22:30.31838 LOG:  duration: 2392.409 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:22:30.31851 	       relname as relname,
+2025-03-21_09:22:30.31865 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:22:30.31873 	  FROM pg_class
+2025-03-21_09:22:30.31880 	 WHERE relkind = 'r';
+2025-03-21_09:22:30.31889 	
+2025-03-21_09:22:45.39372 LOG:  duration: 2457.937 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:22:45.39387 	       relname as relname,
+2025-03-21_09:22:45.39394 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:22:45.39400 	  FROM pg_class
+2025-03-21_09:22:45.39406 	 WHERE relkind = 'r';
+2025-03-21_09:22:45.39412 	
+2025-03-21_09:23:00.29198 LOG:  duration: 2361.303 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:23:00.29218 	       relname as relname,
+2025-03-21_09:23:00.29228 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:23:00.29235 	  FROM pg_class
+2025-03-21_09:23:00.29246 	 WHERE relkind = 'r';
+2025-03-21_09:23:00.29254 	
+2025-03-21_09:23:15.43032 LOG:  duration: 2479.657 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:23:15.43050 	       relname as relname,
+2025-03-21_09:23:15.43062 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:23:15.43068 	  FROM pg_class
+2025-03-21_09:23:15.43075 	 WHERE relkind = 'r';
+2025-03-21_09:23:15.43081 	
+2025-03-21_09:23:30.15646 LOG:  duration: 2224.245 ms  statement: SELECT relnamespace::regnamespace as schemaname,
+2025-03-21_09:23:30.15658 	       relname as relname,
+2025-03-21_09:23:30.15664 	       pg_total_relation_size(oid) bytes
+2025-03-21_09:23:30.15673 	  FROM pg_class
+2025-03-21_09:23:30.15681 	 WHERE relkind = 'r';
+2025-03-21_09:23:30.15689 	
