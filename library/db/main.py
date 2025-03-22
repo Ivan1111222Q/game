@@ -7,6 +7,7 @@ import json
 import os
 from pydantic import BaseModel, validator
 from typing import Optional, List
+from sqlalchemy import func
 
 
 
@@ -176,6 +177,19 @@ async def edit_book(book_id: int, title: str = None, author: str = None, genre: 
     return {"message": "Книга успешно изменена", "success": True}
  
 
+@app.get("/library_stats")
+async def library_stats():
+    """Статистика библиотеки"""
+    # Получаем все книги из базы данных
+    all_book = session.query(Book).all()
+    if not all_book:
+        raise HTTPException(status_code=404, detail="Книги не найдены")
+
+    total_books = session.query(func.count(Book.id)).scalar()  # Общее количество книг
+    avg_rating = session.query(func.avg(Book.rating)).scalar()  # Средний рейтинг
+    avg_year = session.query(func.avg(Book.year)).scalar()  
+        
+    return {"Общее количество книг": total_books, "Средний рейтинг": avg_rating, "Средний год ": avg_year}
 
 
 
