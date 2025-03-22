@@ -100,7 +100,7 @@ async def show_book(title: str, author: str,):
     return book
 
 @app.get("/multiple_books")
-async def multiple_books( title: str = None, author: str = None, genre: str = None, year: int = None, rating: int = None):
+async def multiple_books(title: str = None, author: str = None, genre: str = None, year: int = None, rating: int = None):
     """Поиск книги"""
     
     if title:
@@ -138,15 +138,42 @@ async def multiple_books( title: str = None, author: str = None, genre: str = No
 
         
     if title is None:
-     raise HTTPException(status_code=404, detail="Заполните поля")   
+     raise HTTPException(status_code=404, detail="Заполните поле")   
 
     return book    
 
     
 
 
+@app.get("/edit_book")
+async def edit_book(book_id: int, title: str = None, author: str = None, genre: str = None, year: int = None, rating: int = None):
+    """Редактирование книги"""
 
 
+    book = session.query(Book).filter(Book.id == book_id).first()
+    if not book:
+        raise HTTPException(status_code=404, detail="Книга не найдена")
+
+
+
+
+    if title:
+        book.title = title
+    if  author:
+         book.author = author
+    if genre:
+        book.genre = genre
+    if year:
+        book.year = year
+    if rating:
+        book.rating = rating
+
+        
+    
+    
+
+    session.commit()
+    return {"message": "Книга успешно изменена", "success": True}
  
 
 
