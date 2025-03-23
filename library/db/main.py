@@ -8,10 +8,13 @@ import os
 from pydantic import BaseModel, validator
 from typing import Optional, List
 from sqlalchemy import func
+from sqlalchemy import and_
 
 
 
 app = FastAPI()
+
+
 
 # Создание подключения к базе данных
 engine = create_engine('postgresql://admin:1234@localhost:5432/library')
@@ -37,6 +40,9 @@ class Book(Base):
 # Создание сессии для работы с базой данных
 Session = sessionmaker(bind=engine)
 session = Session()
+
+# Инициализация базы данных
+Base.metadata.create_all(engine)
 
 
 @app.get("/show_books")
@@ -87,7 +93,7 @@ async def remove_book(book_id: int):
     
     session.delete(book)
     session.commit()
-    return {"message": "Все книги успешно удалены", "success": True}
+    return {"message": "Книга успешна удалена", "success": True}
 
 
 
@@ -101,52 +107,38 @@ async def show_book(title: str, author: str,):
     return book
 
 @app.get("/multiple_books")
-async def multiple_books(title: str = None, author: str = None, genre: str = None, year: int = None, rating: int = None):
-    """Поиск книги"""
-    
+async def multiple_books(book_id: int = None, title: str = None, author: str = None, genre: str = None, year: int = None, rating: int = None):
+    """Поиск книги""" 
+
+    filters = []
+
+    if book_id:
+        filters.append(Book.id == book_id)
     if title:
-        book = session.query(Book).filter(Book.title == title).first()
-        if not book:
-            raise HTTPException(status_code=404, detail="Книга не найдена")
-        return book
-        
-    
-    
+        filters.append(Book.title == title)
     if author:
-        book = session.query(Book).filter(Book.author == author).first()
-        if not book:
-            raise HTTPException(status_code=404, detail="Автор не найден")
-        return book
-    
+        filters.append(Book.author == author)
     if genre:
-        book = session.query(Book).filter(Book.genre == genre).all()
-        if not book:
-            raise HTTPException(status_code=404, detail="Жанр не найдены")
-        return book
-    
+        filters.append(Book.genre == genre)
     if year:
-        book = session.query(Book).filter(Book.year == year).all()
-        if not book:
-            raise HTTPException(status_code=404, detail="Книги с таким годом не найдены")
-        return book
-    
+        filters.append(Book.year == year)
     if rating:
-        book = session.query(Book).filter(Book.rating == rating).all()
-        if not book:
-            raise HTTPException(status_code=404, detail="Книги с таким рейтингом не найдены")
-        return book
-        
+        filters.append(Book.rating == rating)
 
-        
-    if title is None:
-     raise HTTPException(status_code=404, detail="Заполните поле")   
+    if filters:
+            book = session.query(Book).filter(and_(*filters)).all()
+    else:
+            book = session.query(Book).all()
 
-    return book    
+    if not book:
+            raise HTTPException(status_code=404, detail="Книга не найдена")
+
+    return book
 
     
 
 
-@app.get("/edit_book")
+@app.put("/edit_book")
 async def edit_book(book_id: int, title: str = None, author: str = None, genre: str = None, year: int = None, rating: int = None):
     """Редактирование книги"""
 
