@@ -1,14 +1,8 @@
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, func, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 import uvicorn
 from fastapi import FastAPI, HTTPException
-import json
-import os
-from pydantic import BaseModel, validator
-from typing import Optional, List
-from sqlalchemy import func
-from sqlalchemy import and_
 
 
 
