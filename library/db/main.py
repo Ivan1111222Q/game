@@ -83,7 +83,7 @@ async def add_book(
 
 @app.delete("/remove_book/")
 async def remove_book(book_id: int):
-    """Удаление книги"""
+    """Удаление книги по id"""
     book = session.query(Book).filter(Book.id == book_id).first()
     if not book:
         raise HTTPException(status_code=404, detail="Книга не найдена")
@@ -99,7 +99,7 @@ async def remove_book(book_id: int):
 
 @app.get("/show_book")
 async def show_book(title: str, author: str,):
-    """Поиск одной книги"""
+    """Поиск книги по title, author"""
     book = session.query(Book).filter(Book.title == title, Book.author == author).first()
     if not book:
         raise HTTPException(status_code=404, detail="Книга не найдена")
@@ -108,7 +108,7 @@ async def show_book(title: str, author: str,):
 
 @app.get("/multiple_books")
 async def multiple_books(book_id: int = None, title: str = None, author: str = None, genre: str = None, year: int = None, rating: int = None):
-    """Поиск книги""" 
+    """Поиск книги по id, title, author, genre, year, rating""" 
 
     filters = []
 
@@ -140,7 +140,7 @@ async def multiple_books(book_id: int = None, title: str = None, author: str = N
 
 @app.put("/edit_book")
 async def edit_book(book_id: int, title: str = None, author: str = None, genre: str = None, year: int = None, rating: int = None):
-    """Редактирование книги"""
+    """Редактирование книг"""
 
 
     book = session.query(Book).filter(Book.id == book_id).first()
@@ -177,8 +177,8 @@ async def library_stats():
         raise HTTPException(status_code=404, detail="Книги не найдены")
 
     total_books = session.query(func.count(Book.id)).scalar()  
-    avg_rating = session.query(func.avg(Book.rating)).scalar()
-    avg_year = session.query(func.avg(Book.year)).scalar()  
+    avg_rating = round(session.query(func.avg(Book.rating)).scalar(), 2)
+    avg_year = round(session.query(func.avg(Book.year)).scalar(), 2)  
         
     return {"Общее количество книг": total_books, "Средний рейтинг": avg_rating, "Средний год ": avg_year}
 
