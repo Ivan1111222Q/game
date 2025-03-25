@@ -1,6 +1,6 @@
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import sessionmaker, DeclarativeBase, relationship
 import uvicorn
 from fastapi import FastAPI, HTTPException
 import json
@@ -9,6 +9,7 @@ from pydantic import BaseModel, validator
 from typing import Optional, List
 from sqlalchemy import func
 from sqlalchemy import and_
+import logging
 
 
 app = FastAPI()
@@ -34,6 +35,12 @@ class Book(Base):
     year = Column(Integer)
     rating = Column(Integer)
 
+
+     # Определение отношения к User_book
+    user_books = relationship("User_book", back_populates="book")
+    # Опционально: Прямое отношение к User через User_book
+    users = relationship("User", secondary="users_book", back_populates="books")    
+
 # Таблица пользователей
 class User(Base):
     __tablename__ = 'users'
@@ -44,16 +51,24 @@ class User(Base):
     is_active = Column(Integer, default=1)
     email = Column(String, unique=True)
 
+    # Определение отношения к User_book
+    user_books = relationship("User_book", back_populates="user")
+    # Опционально: Прямое отношение к Book через User_book
+    books = relationship("Book", secondary="users_book", back_populates="users")    
+
 
 # Таблица пользователей
 class User_book(Base):
     __tablename__ = 'users_book'
     
     id = Column(Integer, primary_key=True)
-    id_user = Column(Integer)
-    id_book = Column(Integer)
+    id_user = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'))
+    id_book = Column(Integer, ForeignKey('books.id', ondelete='CASCADE'))
     sum_book = Column(Integer)
-    
+
+    # Определение отношений к User и Book
+    user = relationship("User", back_populates="user_books")
+    book = relationship("Book", back_populates="user_books")    
 
 
 
@@ -63,6 +78,19 @@ session = Session()
 
 # Инициализация базы данных
 Base.metadata.create_all(engine)
+
+
+@app.get("/book_users/{book_id}")
+async def get_book_users(book_id: int):
+    """Получить всех пользователей, которые взяли конкретную книгу"""
+    book = session.query(Book).filter(Book.id == book_id).first()
+    if not book:
+        raise HTTPException(status_code=404, detail=f"Книга с id {book_id} не найдена")
+    
+    # Использование отношения для получения пользователей
+    return {"book": book.title, "users": [{"id": ub.user.id, "name": ub.user.name} 
+                                         for ub in book.user_books]}
+
 
 
 @app.get("/user_book")
@@ -92,16 +120,15 @@ async def get_extra_books(id_book: int, id_user: int):
         raise HTTPException(status_code=409, detail=f"Пользователь {id_user} уже взял {id_book} книгу")
     
     
-    db_user_book = User_book(
-        id_user=id_user,
-        id_book=id_book,
-        sum_book=1
-        )
+    db_user_book = User_book( id_user=id_user, id_book=id_book, sum_book=1 )
     
     session.add(db_user_book)
     session.commit()
-    return {"message": "Книга успешно выдана", "success": True}
+
     
+    return {"message": f"Книга {book.title} id={id_book} выдана пользователю {user.name} id={id_user}, ", "success": True}
+    # return {"book": book.title, "users": [{"id": ub.user.id, "name": ub.user.name} 
+    #                                      for ub in book.user_books]}
 
 
 
