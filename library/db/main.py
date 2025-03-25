@@ -1,9 +1,14 @@
-from sqlalchemy import create_engine, Column, Integer, String, func, and_
+from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, DeclarativeBase
 import uvicorn
 from fastapi import FastAPI, HTTPException
-
+import json
+import os
+from pydantic import BaseModel, validator
+from typing import Optional, List
+from sqlalchemy import func
+from sqlalchemy import and_
 
 
 app = FastAPI()
@@ -29,6 +34,27 @@ class Book(Base):
     year = Column(Integer)
     rating = Column(Integer)
 
+# Таблица пользователей
+class User(Base):
+    __tablename__ = 'users'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    fullname = Column(String)
+    is_active = Column(Integer, default=1)
+    email = Column(String, unique=True)
+
+
+# Таблица пользователей
+class User_book(Base):
+    __tablename__ = 'users_book'
+    
+    id = Column(Integer, primary_key=True)
+    id_user = Column(Integer)
+    id_book = Column(Integer)
+    sum_book = Column(Integer)
+    
+
 
 
 # Создание сессии для работы с базой данных
@@ -37,6 +63,134 @@ session = Session()
 
 # Инициализация базы данных
 Base.metadata.create_all(engine)
+
+
+@app.get("/user_book")
+async def get_user_book():
+    """Получение списка пользователей с их книгами"""
+    users_books = session.query(User_book).all()
+    return users_books
+
+
+@app.post("/extra_book")
+async def get_extra_books(id_book: int, id_user: int):
+    """Выдача книг пользователю"""
+
+    user = session.query(User).filter(User.id == id_user).first()
+    book = session.query(Book).filter(Book.id == id_book).first()
+
+
+    if not user:
+        raise HTTPException(status_code=404, detail=f" Пользователь с id {id_user}  не существует")
+    if not book:
+        raise HTTPException(status_code=404, detail=f" Книга с id {id_book} не существует")
+    if not user.is_active:
+        raise HTTPException(status_code=404, detail="Данный пользователь не активирован")
+
+    user_book = session.query(User_book).filter(User_book.id_user == id_user, User_book.id_book == id_book).first()
+    if user_book:
+        raise HTTPException(status_code=409, detail=f"Пользователь {id_user} уже взял {id_book} книгу")
+    
+    
+    db_user_book = User_book(
+        id_user=id_user,
+        id_book=id_book,
+        sum_book=1
+        )
+    
+    session.add(db_user_book)
+    session.commit()
+    return {"message": "Книга успешно выдана", "success": True}
+    
+
+
+
+@app.post("/users")
+async def create_user(name: str, fullname: str, email: str):
+    """Создание нового пользователя"""
+    existing_user = session.query(User).filter(User.name == name, User.fullname == fullname).first()
+    if existing_user:
+        raise HTTPException(status_code=409, detail=f"Пользователь с {name} и {fullname} существует ")
+     
+    email_user = session.query(User).filter(User.email == email).first()
+    if email_user:
+        raise HTTPException(status_code=409, detail=f"Пользователь с таким {email} существует ")
+
+    db_user = User(
+        name=name,
+        fullname=fullname,
+        email=email
+      )
+
+    session.add(db_user)
+    session.commit()
+    return {"message": "Пользователь успешно создан", "success": True}
+
+
+@app.get("/show_users")
+async def show_users():
+    """Вывод списка пользователей"""
+    all_users = session.query(User).all()
+    return all_users
+
+
+@app.put("/activate_user")
+async def activate_user(user_id: int):
+    """Активация пользователя"""
+    existing_user = session.query(User).filter(User.id == user_id).first()
+    if not existing_user:
+        raise HTTPException(status_code=404, detail=f"Пользователь {user_id} не существует ")
+    
+
+    
+    if existing_user.is_active == 1:
+        raise HTTPException(status_code=400, detail=f"Пользователь {user_id} уже активирован")
+
+    
+    existing_user.is_active = 1
+
+    session.commit()
+
+    return {"message": "Пользователь успешно активирован", "success": True}
+
+
+@app.put("/deactivate_user")
+async def deactivate_user(user_id: int):
+    """Деактивация пользователя"""
+    existing_user = session.query(User).filter(User.id == user_id).first()
+    if not existing_user:
+        raise HTTPException(status_code=404, detail=f"Пользователь {user_id} не существует ")
+    
+
+    
+    if existing_user.is_active == 0:
+        raise HTTPException(status_code=400, detail=f"Пользователь {user_id} уже деактивирован")
+
+    
+    existing_user.is_active = 0
+
+    session.commit()
+
+    return {"message": "Пользователь успешно деактивирован", "success": True}
+
+
+@app.get("/show_user")
+async def show_user(name: str = None, fullname: str = None, user_id: str = None):
+    """Получение информации о пользователе"""
+    if user_id:
+        existing_user = session.query(User).filter(User.id == user_id).first()
+        if not existing_user:
+            raise HTTPException(status_code=404, detail=f"Пользователь {user_id} не существует ")
+        return existing_user
+
+    if name and fullname:
+        existing_user = session.query(User).filter(User.name == name, User.fullname == fullname).first()
+        if not existing_user:
+            raise HTTPException(status_code=404, detail=f"Пользователь {name} {fullname} не существует ")
+        return existing_user
+
+    raise HTTPException(status_code=400, detail="Не указан ID или имя и фамилия пользователя")
+
 
 
 @app.get("/show_books")
@@ -172,7 +326,8 @@ async def library_stats():
 
     total_books = session.query(func.count(Book.id)).scalar()  
     avg_rating = round(session.query(func.avg(Book.rating)).scalar(), 2)
-    avg_year = round(session.query(func.avg(Book.year)).scalar(), 2)  
+    avg_year = round(session.query(func.avg(Book.year)).scalar(), 2)
+    
         
     return {"Общее количество книг": total_books, "Средний рейтинг": avg_rating, "Средний год ": avg_year}
 
