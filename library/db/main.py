@@ -119,7 +119,12 @@ async def get_extra_books(id_book: int, id_user: int):
         raise HTTPException(status_code=409, detail=f"Пользователь {id_user} уже взял {id_book} книгу")
     
     
-    db_user_book = User_book( id_user=id_user, id_book=id_book, sum_book=1 )
+    total_books = session.query(func.count(User_book.id)).filter(User_book.id_user == id_user).scalar()
+    if total_books >= 10:
+        raise HTTPException(status_code=409, detail="Достигнут лимит выдачи книг")
+ 
+    
+    db_user_book = User_book( id_user=id_user, id_book=id_book)
     
     session.add(db_user_book)
     session.commit()
