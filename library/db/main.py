@@ -88,8 +88,7 @@ async def get_book_users(book_id: int):
         raise HTTPException(status_code=404, detail=f"Книга с id {book_id} не найдена")
     
     # Использование отношения для получения пользователей
-    return {"book": book.title, "users": [{"id": ub.user.id, "name": ub.user.name} 
-                                         for ub in book.user_books]}
+    return {"book": book.title, "users": [{"id": ub.user.id, "name": ub.user.name} for ub in book.user_books]}
 
 
 
