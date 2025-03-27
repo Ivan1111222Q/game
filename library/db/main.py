@@ -34,6 +34,7 @@ class Book(Base):
     genre = Column(String)
     year = Column(Integer)
     rating = Column(Integer)
+    cout_book = Column(Integer, default=0)
 
 
      # Определение отношения к User_book
@@ -64,7 +65,7 @@ class User_book(Base):
     id = Column(Integer, primary_key=True)
     id_user = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'))
     id_book = Column(Integer, ForeignKey('books.id', ondelete='CASCADE'))
-    sum_book = Column(Integer)
+    
 
     # Определение отношений к User и Book
     user = relationship("User", back_populates="user_books")
@@ -78,6 +79,38 @@ session = Session()
 
 # Инициализация базы данных
 Base.metadata.create_all(engine)
+
+
+
+
+
+@app.post("/increase_book_count")
+async def increase_book_count(book_id: int, amount: int = 1):
+    """Увеличение количества книг на указанное число"""
+    book = session.query(Book).filter(Book.id == book_id).first()
+    if not book:
+        raise HTTPException(status_code=404, detail=f"Книга с id {book_id} не найдена")
+    
+    book.cout_book += amount
+    session.commit()
+    return {"message": f"Количество книги увеличилось на {amount}. Текущие количество {book.cout_book}", "success": True}
+
+
+@app.post("/decrease_book_count")
+async def decrease_book_count(book_id: int, amount: int = 1):
+    """Уменьшение количества книг на указанное число"""
+    book = session.query(Book).filter(Book.id == book_id).first()
+    if not book:
+        raise HTTPException(status_code=404, detail=f"Книга с id {book_id} не найдена")
+    
+    if book.cout_book < amount:
+        raise HTTPException(status_code=400, detail=f"Недостаточно книг для уменьшения. Текущее количество {book.cout_book}")
+    
+    book.cout_book -= amount
+    session.commit()
+    return {"message": f"Количество книги уменьшилось на {amount}. Текущие количество {book.cout_book}", "success": True}
+    
+
 
 
 @app.get("/book_users/{book_id}")
