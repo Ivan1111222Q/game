@@ -132,12 +132,13 @@ async def get_user_book():
     return users_books
 
 
-@app.post("/extra_book")
-async def get_extra_books(id_book: int, id_user: int):
+@app.post("/add_book_user")
+async def add_book_user(id_book: int, id_user: int):
     """Выдача книг пользователю"""
 
     user = session.query(User).filter(User.id == id_user).first()
     book = session.query(Book).filter(Book.id == id_book).first()
+   
 
 
     if not user:
@@ -155,10 +156,17 @@ async def get_extra_books(id_book: int, id_user: int):
     total_books = session.query(func.count(User_book.id)).filter(User_book.id_user == id_user).scalar()
     if total_books >= 10:
         raise HTTPException(status_code=409, detail="Достигнут лимит выдачи книг")
+    
+    if book.cout_book <=0:
+         raise HTTPException(status_code=409, detail="Книг нет в наличии")
+    book.cout_book -= 1
+    session.commit()
  
     
     db_user_book = User_book( id_user=id_user, id_book=id_book)
-    
+
+
+   
     session.add(db_user_book)
     session.commit()
 
