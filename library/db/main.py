@@ -81,7 +81,16 @@ session = Session()
 Base.metadata.create_all(engine)
 
 
-
+@app.get("/statistics_book_user")
+async def statistics_book_user(user_id: str):
+    """Статистика: сколько книг у пользователей"""
+    
+    result = session.query(User.id, User.name, func.count(User_book.id_book).label('count_books')).join(User_book).filter(User.id == user_id).group_by(User.id, User.name).first()
+    if not result:
+        raise HTTPException(status_code=404, detail=f"Статистика по пользователю с id {user_id} не найдена")
+    
+    return {"id пользователя": result.id, "Имя": result.name, "Количество книг": result.count_books, "success": True}
+  
 
 
 @app.post("/increase_book_count")
@@ -192,7 +201,7 @@ async def return_book_user(id_book: int, id_user: int):
     
     book.cout_book += 1
     session.commit()
-    
+
     session.delete(user_book)
     session.commit()
     
