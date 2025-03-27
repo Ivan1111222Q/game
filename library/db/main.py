@@ -172,8 +172,34 @@ async def add_book_user(id_book: int, id_user: int):
 
     
     return {"message": f"Книга {book.title} id={id_book} выдана пользователю {user.name} id={id_user}, ", "success": True}
-    # return {"book": book.title, "users": [{"id": ub.user.id, "name": ub.user.name} 
-    #                                      for ub in book.user_books]}
+   
+
+
+@app.post("/return_book_user")
+async def return_book_user(id_book: int, id_user: int):
+    """Возвращение книги пользователю"""
+    user = session.query(User).filter(User.id == id_user).first()
+    book = session.query(Book).filter(Book.id == id_book).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail=f"Пользователь с id {id_user} не существует")
+    if not book:
+        raise HTTPException(status_code=404, detail=f"Книга с id {id_book} не существует")
+
+    user_book = session.query(User_book).filter(User_book.id_user == id_user, User_book.id_book == id_book).first()
+    if not user_book:
+        raise HTTPException(status_code=404, detail=f"Пользователь {id_user} не взял {id_book} книгу")
+    
+    book.cout_book += 1
+    session.commit()
+    
+    session.delete(user_book)
+    session.commit()
+    
+    
+
+    
+    return {"message": f"Книга {book.title} id={id_book} возвращена пользователем {user.name} id={id_user}, ", "success": True}
 
 
 
