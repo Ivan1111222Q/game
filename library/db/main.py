@@ -254,6 +254,7 @@ async def add_book_user(id_book: int, id_user: int):
 async def return_book_user(id_book: int, id_user: int):
     """Возвращение книги пользователем"""
     logger.info(f"Запрос на возврат книги с id: {id_book} пользователю с id: {id_user}")
+
     user = session.query(User).filter(User.id == id_user).first()
     book = session.query(Book).filter(Book.id == id_book).first()
 
@@ -484,7 +485,7 @@ async def show_book(title: str, author: str,):
         logger.warning("Книга не найдена")  
         raise HTTPException(status_code=404, detail="Книга не найдена")
     
-    logger.info(f"Возвращаем title и author")
+    logger.info(f"Возвращаем найденые книги")
     return book
 
 @app.get("/multiple_books")
