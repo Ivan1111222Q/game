@@ -11,6 +11,7 @@ from sqlalchemy import func
 from sqlalchemy import and_
 import logging
 from pythonjsonlogger import jsonlogger
+from sqlalchemy.exc import SQLAlchemyError
 
 
 # Создаем логгер
@@ -112,24 +113,37 @@ Base.metadata.create_all(engine)
 async def statistics_book_user(user_id: str):
     """Статистика: сколько книг у пользователя"""
     logger.info(f"Запрос статистики для пользователя с id: {user_id}")
-    
-    result = session.query(User.id, User.name, func.count(User_book.id_book).label('count_books')).join(User_book).filter(User.id == user_id).group_by(User.id, User.name).first()
 
-    if not result:
+    try:
+    
+     result = session.query(User.id, User.name, func.count(User_book.id_book).label('count_books')).join(User_book).filter(User.id == user_id).group_by(User.id, User.name).first()
+
+     if not result:
         logger.warning(f"Статистика для пользователя с id {user_id} не найдена")
         raise HTTPException(status_code=404, detail=f"Статистика по пользователю с id {user_id} не найдена")
     
-    logger.info(f"Статистика для пользователя с id {user_id} успешно получена")
-    return {"id пользователя": result.id, "Имя": result.name, "Количество книг": result.count_books, "success": True}
+     logger.info(f"Статистика для пользователя с id {user_id} успешно получена")
+     return {"id пользователя": result.id, "Имя": result.name, "Количество книг": result.count_books, "success": True}
+    
+    except SQLAlchemyError as e:
+        logger.error(f"Ошибка базы данных при получении статистики: {e}")
+        session.rollback()  # Откатываем транзакцию
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except HTTPException as e:
+        raise e  # Повторно выбрасываем исключение
+    except Exception as e:
+        logger.error(f"Непредвиденная ошибка при получении статистики: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
     
 
 
 @app.post("/increase_book_count")
 async def increase_book_count(book_id: int, amount: int = 1):
-    """Увеличение количества книг на указанное число"""
+   """Увеличение количества книг на указанное число"""
 
-    logger.info(f"Запрос на увеличение количества книг с id: {book_id} на {amount}")
+   logger.info(f"Запрос на увеличение количества книг с id: {book_id} на {amount}")
 
+   try:
     book = session.query(Book).filter(Book.id == book_id).first()
     if not book:
         logger.warning(f"Книга с id {book_id} не найдена")
@@ -139,8 +153,19 @@ async def increase_book_count(book_id: int, amount: int = 1):
     session.commit()
 
     logger.info(f"Количество книги с id {book_id} увеличено на {amount}.  Текущее количество: {book.cout_book}")
-    return {"message": f"Количество книги увеличилось на {amount}. Текущие количество {book.cout_book}", "success": True}
+    return {"message": f"Количество книги  id {book_id} увеличилось на {amount}. Текущие количество {book.cout_book}", "success": True}
 
+   except SQLAlchemyError as e:
+        logger.error(f"Ошибка базы данных при увеличении количества книг: {e}")
+        session.rollback()  # Откатываем транзакцию
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+   except HTTPException as e:
+        # Перехватываем HTTPException, чтобы не изменять статус код если книга не найдена, то есть
+        raise e  # Повторно выбрасываем исключение
+   except Exception as e:
+        logger.error(f"Непредвиденная ошибка при увеличении количества книг: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
+   
 
 @app.post("/decrease_book_count")
 async def decrease_book_count(book_id: int, amount: int = 1):
