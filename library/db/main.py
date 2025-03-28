@@ -83,14 +83,14 @@ Base.metadata.create_all(engine)
 
 @app.get("/statistics_book_user")
 async def statistics_book_user(user_id: str):
-    """Статистика: сколько книг у пользователей"""
+    """Статистика: сколько книг у пользователя"""
     
     result = session.query(User.id, User.name, func.count(User_book.id_book).label('count_books')).join(User_book).filter(User.id == user_id).group_by(User.id, User.name).first()
     if not result:
         raise HTTPException(status_code=404, detail=f"Статистика по пользователю с id {user_id} не найдена")
     
     return {"id пользователя": result.id, "Имя": result.name, "Количество книг": result.count_books, "success": True}
-  
+    
 
 
 @app.post("/increase_book_count")
@@ -186,7 +186,7 @@ async def add_book_user(id_book: int, id_user: int):
 
 @app.post("/return_book_user")
 async def return_book_user(id_book: int, id_user: int):
-    """Возвращение книги пользователю"""
+    """Возвращение книги пользователем"""
     user = session.query(User).filter(User.id == id_user).first()
     book = session.query(Book).filter(Book.id == id_book).first()
 
