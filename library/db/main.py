@@ -168,6 +168,8 @@ async def add_book_user(id_book: int, id_user: int):
     
     if book.cout_book <=0:
          raise HTTPException(status_code=409, detail="Книг нет в наличии")
+    
+    
     book.cout_book -= 1
     session.commit()
  
