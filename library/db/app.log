@@ -1,0 +1,12 @@
+{"asctime": "2025-03-28 21:49:23,830", "name": "root", "funcName": "statistics_book_user", "levelname": "INFO", "message": "Запрос статистики для пользователя с id: 1"}
+{"asctime": "2025-03-28 21:49:23,843", "name": "root", "funcName": "statistics_book_user", "levelname": "INFO", "message": "Статистика для пользователя с id 1 успешно получена"}
+{"asctime": "2025-03-28 21:49:25,603", "name": "root", "funcName": "statistics_book_user", "levelname": "INFO", "message": "Запрос статистики для пользователя с id: 1"}
+{"asctime": "2025-03-28 21:49:25,606", "name": "root", "funcName": "statistics_book_user", "levelname": "INFO", "message": "Статистика для пользователя с id 1 успешно получена"}
+{"asctime": "2025-03-28 21:49:25,749", "name": "root", "funcName": "statistics_book_user", "levelname": "INFO", "message": "Запрос статистики для пользователя с id: 1"}
+{"asctime": "2025-03-28 21:49:25,752", "name": "root", "funcName": "statistics_book_user", "levelname": "INFO", "message": "Статистика для пользователя с id 1 успешно получена"}
+{"asctime": "2025-03-28 21:49:25,899", "name": "root", "funcName": "statistics_book_user", "levelname": "INFO", "message": "Запрос статистики для пользователя с id: 1"}
+{"asctime": "2025-03-28 21:49:25,904", "name": "root", "funcName": "statistics_book_user", "levelname": "INFO", "message": "Статистика для пользователя с id 1 успешно получена"}
+{"asctime": "2025-03-28 22:21:42,176", "name": "root", "funcName": "show_books", "levelname": "INFO", "message": "Запрос на получение списка всех книг"}
+{"asctime": "2025-03-28 22:21:42,188", "name": "root", "funcName": "show_books", "levelname": "INFO", "message": "Вывод всех книг"}
+{"asctime": "2025-03-28 22:24:17,533", "name": "root", "funcName": "show_book", "levelname": "INFO", "message": "Поиск книги по Преступление и наказание, Фёдор Достоевский"}
+{"asctime": "2025-03-28 22:24:17,541", "name": "root", "funcName": "show_book", "levelname": "INFO", "message": "Возвращаем <__main__.Book object at 0x11185c2d0>"}
