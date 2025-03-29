@@ -126,13 +126,13 @@ async def statistics_book_user(user_id: str):
      return {"id пользователя": result.id, "Имя": result.name, "Количество книг": result.count_books, "success": True}
     
     except SQLAlchemyError as e:
-        logger.error(f"Ошибка базы данных при получении статистики: {e}")
+        logger.exception(f"Ошибка базы данных при получении статистики: {e}")
         session.rollback()  # Откатываем транзакцию
         raise HTTPException(status_code=500, detail="Ошибка базы данных")
     except HTTPException as e:
         raise e  # Повторно выбрасываем исключение
     except Exception as e:
-        logger.error(f"Непредвиденная ошибка при получении статистики: {e}")
+        logger.exception(f"Непредвиденная ошибка при получении статистики: {e}")
         raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
     
 
@@ -156,37 +156,44 @@ async def increase_book_count(book_id: int, amount: int = 1):
     return {"message": f"Количество книги  id {book_id} увеличилось на {amount}. Текущие количество {book.cout_book}", "success": True}
 
    except SQLAlchemyError as e:
-        logger.error(f"Ошибка базы данных при увеличении количества книг: {e}")
-        session.rollback()  # Откатываем транзакцию
+        logger.exception(f"Ошибка базы данных при увеличении количества книг: {e}")
+        session.rollback()  
         raise HTTPException(status_code=500, detail="Ошибка базы данных")
-   except HTTPException as e:
-        # Перехватываем HTTPException, чтобы не изменять статус код если книга не найдена, то есть
-        raise e  # Повторно выбрасываем исключение
    except Exception as e:
-        logger.error(f"Непредвиденная ошибка при увеличении количества книг: {e}")
+        logger.exception(f"Непредвиденная ошибка при увеличении количества книг: {e}")
         raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
    
 
 @app.post("/decrease_book_count")
 async def decrease_book_count(book_id: int, amount: int = 1):
     """Уменьшение количества книг на указанное число"""
-     
-    logger.info(f"Запрос на уменьшение количества книг с id: {book_id} на {amount}")
 
-    book = session.query(Book).filter(Book.id == book_id).first()
-    if not book:
+    try:
+     
+     logger.info(f"Запрос на уменьшение количества книг с id: {book_id} на {amount}")
+
+     book = session.query(Book).filter(Book.id == book_id).first()
+     if not book:
         logger.warning(f"Книга с id {book_id} не найдена")
         raise HTTPException(status_code=404, detail=f"Книга с id {book_id} не найдена")
     
-    if book.cout_book < amount:
+     if book.cout_book < amount:
         logger.warning(f"Недостаточно книг для уменьшения. Текущее количество {book.cout_book}")  
         raise HTTPException(status_code=400, detail=f"Недостаточно книг для уменьшения. Текущее количество {book.cout_book}")
     
-    book.cout_book -= amount
-    session.commit()
+     book.cout_book -= amount
+     session.commit()
 
-    logger.info(f"Количество книги с id {book_id} уменьшено на {amount}.  Текущее количество: {book.cout_book}")
-    return {"message": f"Количество книги уменьшилось на {amount}. Текущие количество {book.cout_book}", "success": True}
+     logger.info(f"Количество книги с id {book_id} уменьшено на {amount}.  Текущее количество: {book.cout_book}")
+     return {"message": f"Количество книги уменьшилось на {amount}. Текущие количество {book.cout_book}", "success": True}
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при уменьшении количества книг: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при уменьшении количества книг: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
     
 
 
@@ -196,16 +203,24 @@ async def get_book_users(book_id: int):
     """Получить всех пользователей, которые взяли конкретную книгу"""
     logger.info(f"Запрос списка пользователей для книги с id: {book_id}")
 
-    
-    book = session.query(Book).filter(Book.id == book_id).first()
+    try:
 
-    if not book:
+     book = session.query(Book).filter(Book.id == book_id).first()
+
+     if not book:
         logger.warning(f"Книга с id {book_id} не найдена")
         raise HTTPException(status_code=404, detail=f"Книга с id {book_id} не найдена")
     
-    logger.info(f"Список пользователей для книги с id {book_id} успешно получен")
-    return {"book": book.title, "users": [{"id": ub.user.id, "name": ub.user.name} for ub in book.user_books]}
-
+     logger.info(f"Список пользователей для книги с id {book_id} успешно получен")
+     return {"book": book.title, "users": [{"id": ub.user.id, "name": ub.user.name} for ub in book.user_books]}
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при получении списка пользователей для книги: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при получении списка пользователей для книги: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
 
 
 @app.get("/user_book")
@@ -213,14 +228,24 @@ async def get_user_book():
     """Получение списка пользователей с их книгами"""
     logger.info("Запрос списка всех пользователей с их книгами")
 
-    
-    users_books = session.query(User_book).all()
-    if not users_books:
+    try:
+
+     users_books = session.query(User_book).all()
+     if not users_books:
         logger.warning("Список всех пользователей с их книгами пуст")
         raise HTTPException(status_code=404, detail="Список всех пользователей с их книгами пуст")
     
-    logger.info("Список всех пользователей с их книгами успешно получен")
-    return users_books
+     logger.info("Список всех пользователей с их книгами успешно получен")
+     return users_books
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при получении списка пользователей с их книгами: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при получении списка пользователей с их книгами: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
+
 
 
 @app.post("/add_book_user")
@@ -228,50 +253,60 @@ async def add_book_user(id_book: int, id_user: int):
     """Выдача книг пользователю"""
     logger.info(f"Запрос на выдачу книги с id: {id_book} пользователю с id: {id_user}")
 
-    user = session.query(User).filter(User.id == id_user).first()
-    book = session.query(Book).filter(Book.id == id_book).first()
+    try:
+
+     user = session.query(User).filter(User.id == id_user).first()
+     book = session.query(Book).filter(Book.id == id_book).first()
    
 
 
-    if not user:
+     if not user:
         logger.warning(f"Пользователь с id {id_user}  не существует")
         raise HTTPException(status_code=404, detail=f" Пользователь с id {id_user}  не существует")
-    if not book:
+     if not book:
         logger.warning(f"Книга с id {id_book} не существует")
         raise HTTPException(status_code=404, detail=f" Книга с id {id_book} не существует")
-    if not user.is_active:
+     if not user.is_active:
         logger.warning(f"Данный пользователь не активирован")
         raise HTTPException(status_code=404, detail="Данный пользователь не активирован")
 
-    user_book = session.query(User_book).filter(User_book.id_user == id_user, User_book.id_book == id_book).first()
-    if user_book:
+     user_book = session.query(User_book).filter(User_book.id_user == id_user, User_book.id_book == id_book).first()
+     if user_book:
         logger.warning(f"Пользователь {id_user} уже взял {id_book} книгу") 
         raise HTTPException(status_code=409, detail=f"Пользователь {id_user} уже взял {id_book} книгу")
     
     
-    total_books = session.query(func.count(User_book.id)).filter(User_book.id_user == id_user).scalar()
-    if total_books >= 10:
+     total_books = session.query(func.count(User_book.id)).filter(User_book.id_user == id_user).scalar()
+     if total_books >= 10:
         logger.warning(f"Достигнут лимит выдачи книг")
         raise HTTPException(status_code=409, detail="Достигнут лимит выдачи книг")
     
-    if book.cout_book <=0:
+     if book.cout_book <=0:
          logger.warning(f"Книг нет в наличии") 
          raise HTTPException(status_code=409, detail="Книг нет в наличии")
     
     
-    book.cout_book -= 1
-    session.commit()
+     book.cout_book -= 1
+     session.commit()
  
     
-    db_user_book = User_book( id_user=id_user, id_book=id_book)
+     db_user_book = User_book( id_user=id_user, id_book=id_book)
 
 
    
-    session.add(db_user_book)
-    session.commit()
+     session.add(db_user_book)
+     session.commit()
 
-    logger.info(f"Книга {book.title} id={id_book} выдана пользователю {user.name} id={id_user}, ")
-    return {"message": f"Книга {book.title} id={id_book} выдана пользователю {user.name} id={id_user}, ", "success": True}
+     logger.info(f"Книга {book.title} id={id_book} выдана пользователю {user.name} id={id_user}, ")
+     return {"message": f"Книга {book.title} id={id_book} выдана пользователю {user.name} id={id_user}, ", "success": True}
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при выдачи книг пользователю: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при получении выдачи книг пользователю: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
    
 
 
@@ -280,31 +315,42 @@ async def return_book_user(id_book: int, id_user: int):
     """Возвращение книги пользователем"""
     logger.info(f"Запрос на возврат книги с id: {id_book} пользователю с id: {id_user}")
 
-    user = session.query(User).filter(User.id == id_user).first()
-    book = session.query(Book).filter(Book.id == id_book).first()
+    try:
 
-    if not user:
+     user = session.query(User).filter(User.id == id_user).first()
+     book = session.query(Book).filter(Book.id == id_book).first()
+
+     if not user:
         logger.warning(f"Пользователь с id {id_user} не существует")
         raise HTTPException(status_code=404, detail=f"Пользователь с id {id_user} не существует")
-    if not book:
+     if not book:
         logger.warning(f"Книга с id {id_book} не существует")
         raise HTTPException(status_code=404, detail=f"Книга с id {id_book} не существует")
 
-    user_book = session.query(User_book).filter(User_book.id_user == id_user, User_book.id_book == id_book).first()
-    if not user_book:
+     user_book = session.query(User_book).filter(User_book.id_user == id_user, User_book.id_book == id_book).first()
+     if not user_book:
         logger.warning(f"Пользователь {id_user} не взял {id_book} книгу")
         raise HTTPException(status_code=404, detail=f"Пользователь {id_user} не взял {id_book} книгу")
     
-    book.cout_book += 1
-    session.commit()
+     book.cout_book += 1
+     session.commit()
 
-    session.delete(user_book)
-    session.commit()
+     session.delete(user_book)
+     session.commit()
     
     
 
-    logger.info(f"Книга {book.title} id={id_book} возвращена пользователем {user.name} id={id_user}")
-    return {"message": f"Книга {book.title} id={id_book} возвращена пользователем {user.name} id={id_user}, ", "success": True}
+     logger.info(f"Книга {book.title} id={id_book} возвращена пользователем {user.name} id={id_user}")
+     return {"message": f"Книга {book.title} id={id_book} возвращена пользователем {user.name} id={id_user}, ", "success": True}
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при возврате книг пользователю: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при получении возврате книг пользователю: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
+   
 
 
 
@@ -313,27 +359,37 @@ async def create_user(name: str, fullname: str, email: str):
     """Создание нового пользователя"""
     logger.info(f"Создание нового пользователя {name}, {fullname}, {email}") 
 
-    existing_user = session.query(User).filter(User.name == name, User.fullname == fullname).first()
-    if existing_user:
+    try:
+
+     existing_user = session.query(User).filter(User.name == name, User.fullname == fullname).first()
+     if existing_user:
         logger.warning(f"Пользователь с {name} и {fullname} существует")
         raise HTTPException(status_code=409, detail=f"Пользователь с {name} и {fullname} существует ")
      
-    email_user = session.query(User).filter(User.email == email).first()
-    if email_user:
+     email_user = session.query(User).filter(User.email == email).first()
+     if email_user:
         logger.warning(f"Пользователь с таким {email} существует")
         raise HTTPException(status_code=409, detail=f"Пользователь с таким {email} существует ")
 
-    db_user = User(
+     db_user = User(
         name=name,
         fullname=fullname,
         email=email
       )
 
-    session.add(db_user)
-    session.commit()
+     session.add(db_user)
+     session.commit()
 
-    logger.info(f"Пользователь {name} успешно создан")  
-    return {"message": "Пользователь успешно создан", "success": True}
+     logger.info(f"Пользователь {name} успешно создан")  
+     return {"message": "Пользователь успешно создан", "success": True}
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при создании пользователя: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при создании пользователя: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
 
 
 @app.get("/show_users")
@@ -341,39 +397,58 @@ async def show_users():
     """Вывод списка пользователей"""
     logger.info("Запрос на получение списка всех пользователей")
 
+    try:
         
-    all_users = session.query(User).all()
-    if not all_users:
+     all_users = session.query(User).all()
+     if not all_users:
         logger.warning("Нет ни одного пользователя")
         return {"message": "Нет ни одного пользователя", "success": True}
     
-    logger.info(f"Вывод всех пользователей")
-    return all_users
+     logger.info(f"Вывод всех пользователей")
+     return all_users
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при получении списка пользователей: {e}")
+        session.rollback()
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при получении списка пользователей: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
 
 
 @app.put("/activate_user")
 async def activate_user(user_id: int):
     """Активация пользователя"""
     logger.info(f"Активация пользователя {user_id}")
+
+    try:
                 
-    existing_user = session.query(User).filter(User.id == user_id).first()
-    if not existing_user:
+     existing_user = session.query(User).filter(User.id == user_id).first()
+     if not existing_user:
         logger.warning(f"Пользователь {user_id} не существует")
         raise HTTPException(status_code=404, detail=f"Пользователь {user_id} не существует ")
     
 
     
-    if existing_user.is_active == 1:
+     if existing_user.is_active == 1:
         logger.warning(f"Пользователь {user_id} уже активирован")
         raise HTTPException(status_code=400, detail=f"Пользователь {user_id} уже активирован")
 
     
-    existing_user.is_active = 1
+     existing_user.is_active = 1
 
-    session.commit()
+     session.commit()
 
-    logger.info(f"Пользователь {user_id} успешно активирован")
-    return {"message": "Пользователь успешно активирован", "success": True}
+     logger.info(f"Пользователь {user_id} успешно активирован")
+     return {"message": "Пользователь успешно активирован", "success": True}
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при активации пользователя: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при активации пользователя: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
 
 
 @app.put("/deactivate_user")
@@ -381,24 +456,34 @@ async def deactivate_user(user_id: int):
     """Деактивация пользователя"""
     logger.info(f"Деактиваци {user_id}")
 
-    existing_user = session.query(User).filter(User.id == user_id).first()
-    if not existing_user:
+    try:
+
+     existing_user = session.query(User).filter(User.id == user_id).first()
+     if not existing_user:
         logger.warning(f"Пользователь {user_id} не существует")  
         raise HTTPException(status_code=404, detail=f"Пользователь {user_id} не существует ")
     
 
     
-    if existing_user.is_active == 0:
+     if existing_user.is_active == 0:
         logger.warning(f"Пользователь {user_id} уже деактивирован")  
         raise HTTPException(status_code=400, detail=f"Пользователь {user_id} уже деактивирован")
 
     
-    existing_user.is_active = 0
+     existing_user.is_active = 0
 
-    session.commit()
+     session.commit()
     
-    logger.info(f"Пользователь {user_id} успешно деактивирован")
-    return {"message": "Пользователь успешно деактивирован", "success": True}
+     logger.info(f"Пользователь {user_id} успешно деактивирован")
+     return {"message": "Пользователь успешно деактивирован", "success": True}
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при деактивации пользователя: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при деактивации пользователя: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
 
 
 @app.get("/show_user")
@@ -406,7 +491,9 @@ async def show_user(name: str = None, fullname: str = None, user_id: str = None)
     """Получение информации о пользователе"""
     logger.info(f"Запрос на получение информации о пользователе")
 
-    if user_id:
+    try:
+
+     if user_id:
         logger.info(f"Проверяем существует ли данный {user_id} ")
         existing_user = session.query(User).filter(User.id == user_id).first()
         if not existing_user:
@@ -415,7 +502,7 @@ async def show_user(name: str = None, fullname: str = None, user_id: str = None)
         logger.info(f"Возвращаем {existing_user}")
         return existing_user
 
-    if name and fullname:
+     if name and fullname:
         logger.info(f"Проверяем существует ли данный {name} {fullname} ")  
         existing_user = session.query(User).filter(User.name == name, User.fullname == fullname).first()
         if not existing_user:
@@ -424,8 +511,16 @@ async def show_user(name: str = None, fullname: str = None, user_id: str = None)
         logger.info(f"Возвращаем {existing_user}")
         return existing_user
 
-    logger.warning("Не указан ID или имя и фамилия пользователя")
-    raise HTTPException(status_code=400, detail="Не указан ID или имя и фамилия пользователя")
+     logger.warning("Не указан ID или имя и фамилия пользователя")
+     raise HTTPException(status_code=400, detail="Не указан ID или имя и фамилия пользователя")
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при получении информации о пользователе: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при получении информации о пользователе: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
 
 
 
@@ -434,15 +529,23 @@ async def show_books():
     """Вывод списка книг"""
     logger.info("Запрос на получение списка всех книг")
 
-        
+    try:    
     
-    all_books = session.query(Book).all()
-    if not all_books:
+     all_books = session.query(Book).all()
+     if not all_books:
         logger.warning("Нет ни одной книги")
         return {"message": "Нет ни одной книги", "success": True}
     
-    logger.info(f"Вывод всех книг")  
-    return all_books  
+     logger.info(f"Вывод всех книг")  
+     return all_books
+
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при получении списка книг: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при получении списка книг: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")  
     
 
 @app.post("/add_book/")
@@ -456,14 +559,16 @@ async def add_book(
     """Добавление книги"""
     logger.info(f"Добавление книги {title}, {author}, {genre}, {year}, {rating}")
 
-    existing_book = session.query(Book).filter(Book.title == title).first()
-    if existing_book:
+    try:
+
+     existing_book = session.query(Book).filter(Book.title == title).first()
+     if existing_book:
         logger.warning("Книга с таким названием уже существует")  
         raise HTTPException(status_code=409, detail="Книга с таким названием уже существует")
     
    
 
-    db_book = Book(
+     db_book = Book(
         title= title,
         author= author,
         genre= genre,
@@ -471,11 +576,19 @@ async def add_book(
         rating= rating
       )
 
-    session.add(db_book)
-    session.commit()
+     session.add(db_book)
+     session.commit()
 
-    logger.info(f"Книга {title} успешно добавлена")
-    return {"message": "Книга успешно добавлена", "success": True}
+     logger.info(f"Книга {title} успешно добавлена")
+     return {"message": "Книга успешно добавлена", "success": True}
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при добавлении книги: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при добавлении книги: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
 
 
 
@@ -484,19 +597,29 @@ async def remove_book(book_id: int):
     """Удаление книги по id"""
     logger.info(f"Удаление книги {book_id}")
 
-    book = session.query(Book).filter(Book.id == book_id).first()
-    if not book:
+    try:
+
+     book = session.query(Book).filter(Book.id == book_id).first()
+     if not book:
         logger.warning("Книга не найдена")
         raise HTTPException(status_code=404, detail="Книга не найдена")
     
 
 
     
-    session.delete(book)
-    session.commit()
+     session.delete(book)
+     session.commit()
 
-    logger.info(f"Книга {book_id} успешно удалена")  
-    return {"message": "Книга успешна удалена", "success": True}
+     logger.info(f"Книга {book_id} успешно удалена")  
+     return {"message": "Книга успешна удалена", "success": True}
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при удалении книги: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при удалении книги: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
 
 
 
@@ -505,48 +628,68 @@ async def show_book(title: str, author: str,):
     """Поиск книги по title, author"""
     logger.info(f"Поиск книги по {title}, {author}")
 
-    book = session.query(Book).filter(Book.title == title, Book.author == author).first()
-    if not book:
+    try:
+
+     book = session.query(Book).filter(Book.title == title, Book.author == author).first()
+     if not book:
         logger.warning("Книга не найдена")  
         raise HTTPException(status_code=404, detail="Книга не найдена")
     
-    logger.info(f"Возвращаем найденые книги")
-    return book
+     logger.info(f"Возвращаем найденые книги")
+     return book
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при поиске книги: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при поиске книги: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
 
 @app.get("/multiple_books")
 async def multiple_books(book_id: int = None, title: str = None, author: str = None, genre: str = None, year: int = None, rating: int = None):
     """Поиск книги по id, title, author, genre, year, rating""" 
     logger.info(f"Поиск книги по {book_id}, {title}, {author}, {genre}, {year}, {rating}")
 
+    try:
+
    
 
-    filters = []
+     filters = []
 
-    if book_id:
+     if book_id:
         filters.append(Book.id == book_id)
-    if title:
+     if title:
         filters.append(Book.title == title)
-    if author:
+     if author:
         filters.append(Book.author == author)
-    if genre:
+     if genre:
         filters.append(Book.genre == genre)
-    if year:
+     if year:
         filters.append(Book.year == year)
-    if rating:
+     if rating:
         filters.append(Book.rating == rating)
 
-    if filters:
+     if filters:
             
             book = session.query(Book).filter(and_(*filters)).all()
-    else:
+     else:
             book = session.query(Book).all()
 
-    if not book:
+     if not book:
             logger.warning("Книги не найдены")
             raise HTTPException(status_code=404, detail="Книга не найдена")
     
-    logger.info(f"Возвращаем найденные книги")  
-    return book
+     logger.info(f"Возвращаем найденные книги")  
+     return book
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при поиске книги: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при поиске книги: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
 
     
 
@@ -555,36 +698,46 @@ async def multiple_books(book_id: int = None, title: str = None, author: str = N
 async def edit_book(book_id: int, title: str = None, author: str = None, genre: str = None, year: int = None, rating: int = None):
     """Редактирование книг"""
     logger.info(f"Редактирование книги {book_id}")
-    
 
 
-    book = session.query(Book).filter(Book.id == book_id).first()
-    if not book:
+    try:
+
+
+     book = session.query(Book).filter(Book.id == book_id).first()
+     if not book:
         logger.warning("Книга не найдена")
         raise HTTPException(status_code=404, detail="Книга не найдена")
 
 
 
 
-    if title:
+     if title:
         book.title = title
-    if  author:
+     if  author:
          book.author = author
-    if genre:
+     if genre:
         book.genre = genre
-    if year:
+     if year:
         book.year = year
-    if rating:
+     if rating:
         book.rating = rating
 
         
     
     
 
-    session.commit()
+     session.commit()
 
-    logger.info(f"Книга {book_id} успешно изменена")
-    return {"message": "Книга успешно изменена", "success": True}
+     logger.info(f"Книга {book_id} успешно изменена")
+     return {"message": "Книга успешно изменена", "success": True}
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при редактировании книги: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при редактировании книги: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
  
 
 @app.get("/library_stats")
@@ -592,18 +745,28 @@ async def library_stats():
     """Статистика библиотеки"""
     logger.info("Запрос на получение статистики библиотеки")
 
+    try:
+
         
-    all_book = session.query(Book).all()
-    if not all_book:
+     all_book = session.query(Book).all()
+     if not all_book:
         logger.warning("Нет ни одной книги")
         raise HTTPException(status_code=404, detail="Книги не найдены")
 
-    total_books = session.query(func.count(Book.id)).scalar()  
-    avg_rating = round(session.query(func.avg(Book.rating)).scalar(), 2)
-    avg_year = round(session.query(func.avg(Book.year)).scalar(), 2)
+     total_books = session.query(func.count(Book.id)).scalar()  
+     avg_rating = round(session.query(func.avg(Book.rating)).scalar(), 2)
+     avg_year = round(session.query(func.avg(Book.year)).scalar(), 2)
     
-    logger.info(f"Возвращаем статистику библиотеки")   
-    return {"Общее количество книг": total_books, "Средний рейтинг": avg_rating, "Средний год ": avg_year}
+     logger.info(f"Возвращаем статистику библиотеки")   
+     return {"Общее количество книг": total_books, "Средний рейтинг": avg_rating, "Средний год ": avg_year}
+    
+    except SQLAlchemyError as e:
+        logger.exception(f"Ошибка базы данных при получении статистики библиотеки: {e}")
+        session.rollback()  
+        raise HTTPException(status_code=500, detail="Ошибка базы данных")
+    except Exception as e:
+        logger.exception(f"Непредвиденная ошибка при получении статистики библиотеки: {e}")
+        raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
 
 
 
