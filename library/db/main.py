@@ -129,8 +129,6 @@ async def statistics_book_user(user_id: str):
         logger.exception(f"Ошибка базы данных при получении статистики: {e}")
         session.rollback()  # Откатываем транзакцию
         raise HTTPException(status_code=500, detail="Ошибка базы данных")
-    except HTTPException as e:
-        raise e  # Повторно выбрасываем исключение
     except Exception as e:
         logger.exception(f"Непредвиденная ошибка при получении статистики: {e}")
         raise HTTPException(status_code=500, detail="Непредвиденная ошибка")
