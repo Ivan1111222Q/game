@@ -127,7 +127,7 @@ async def statistics_book_user(user_id: str):
     
     except SQLAlchemyError as e:
         logger.exception(f"Ошибка базы данных при получении статистики: {e}")
-        session.rollback()  # Откатываем транзакцию
+        session.rollback()  
         raise HTTPException(status_code=500, detail="Ошибка базы данных")
     except Exception as e:
         logger.exception(f"Непредвиденная ошибка при получении статистики: {e}")
@@ -142,6 +142,7 @@ async def increase_book_count(book_id: int, amount: int = 1):
    logger.info(f"Запрос на увеличение количества книг с id: {book_id} на {amount}")
 
    try:
+    
     book = session.query(Book).filter(Book.id == book_id).first()
     if not book:
         logger.warning(f"Книга с id {book_id} не найдена")
